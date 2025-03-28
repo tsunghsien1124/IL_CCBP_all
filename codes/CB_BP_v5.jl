@@ -55,7 +55,7 @@ obj_CB(x_1, x_2, μ_0, μ_0_c, ω_1, ω_2, δ, γ, x_T, ν_1, ν_2, α, θ) = ob
 # benchmark parameters #
 #======================#
 @with_kw struct Benchmark_Parameters
-    δ::Float64 = 0.5
+    δ::Float64 = 1.0
     ω_1::Float64 = 1.0
     ω_2::Float64 = -1.0
     μ_0::Float64 = 0.5
