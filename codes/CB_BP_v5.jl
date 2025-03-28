@@ -66,14 +66,14 @@ obj_CB(x_1, x_2, μ_0, μ_0_c, ω_1, ω_2, δ, γ, x_T, ν_1, ν_2, α, θ) = ob
     ν_1::Float64 = 1.0
     ν_2::Float64 = 1.0
     α::Float64 = 1.0
-    θ::Float64 = 0.5
+    θ::Float64 = 1.0
     ϵ_x::Float64 = 1E-6
     ϵ_x_p::Float64 = 1E-0
     ϵ_tol::Float64 = 1E-6
     max_iter::Int64 = 12000
 end
 BP = Benchmark_Parameters()
-PATH_FIG_para = mkpath(PATH_FIG * FL * "γ=$(round(BP.γ,digits=1))-μ_0=$(round(BP.μ_0,digits=1))-α=$(round(BP.α,digits=1))-θ=$(round(BP.θ,digits=1))")
+PATH_FIG_para = mkpath(PATH_FIG * FL * "γ=$(round(BP.γ,digits=1))-μ_0=$(round(BP.μ_0,digits=1))-α=$(round(BP.α,digits=1))-θ=$(round(BP.θ,digits=1))-δ=$(round(BP.δ,digits=1))-ω_1=$(round(BP.ω_1,digits=1))-ω_2=$(round(BP.ω_2,digits=1))")
 
 #==================#
 # benchmark result #
