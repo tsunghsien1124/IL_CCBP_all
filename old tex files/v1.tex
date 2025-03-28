@@ -1,0 +1,96 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{bbm}
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+
+\title{Monetary Policy with Bayesian Persuasion}
+\author{Federico Innocenti \and Tsung-Hsien Li}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Where is Li?
+
+\section{Model}
+There are two states of the world and two actions. We define with $\Omega=\{\omega_1,\omega_2\}$ and $A=\{a_1,a_2\}$ the set of states and actions, respectively. There are two types of agents: a unit mass of receivers (households, hereafter HHs) and a sender (the central bank, hereafter CB). Agents share the same prior belief $\mu_0(\omega)$. The CB provides information in the form of a mapping $\pi \colon \Omega \to \Delta(S)$ [This def contradicts with the equations below] defined as follows from the Bayesian persuasion literature, where $S=\{s_1,s_2\}$ is the set of messages, and $\Delta(S)$ the set of all probability distributions on $S$.
+Each receiver $i$ has an attention budget $c_i$, which is distributed according to $F(\cdot)$. [what should I think about this budget? Like the maximum information-processing capacity?] Receiver $i$ devotes attention to the information $\pi$ provided by the CB if and only if $c(\pi)<c_i$, where $c(\pi)$ is the entropy cost of processing information. In particular,
+$$c(\pi)=\chi\left[H(\mu_0)-\sum_{s}\pi(s) \cdot H(\mu(s))\right]$$
+where $H(\cdot)$ is the entropy defined as
+$$H(\mu)=-[\mu\ln(\mu)+(1-\mu)\ln(1-\mu)]$$
+$\mu(s)$ is the posterior belief following message $s$
+$$\mu(s)=\frac{\pi(s|\omega_1)\mu_0(\omega_1)}{\pi(s|\omega_1)\mu_0(\omega_1)+\pi(s|\omega_2)\mu_0(\omega_2)}$$
+for any message $s\in S$, and $\chi>0$ is a parameter. It follows that the mass of receivers paying attention to CB is $1-F(c(\pi))$. When $\pi$ is uninformative, $\mu(s)=\mu_0$ for any $s\in S$. Therefore, $c(\pi)=0$. Instead, when $\pi$ is perfectly informative then $\mu(s_1)=1$ and $\mu(s_2)=0$. Therefore, $H(\mu(s))=0$ for any $s\in S$, and hence $c(\pi)=\chi H(\mu_0)$. I assume that CB is benevolent. In other words, CB has the same objective as receivers. To be specific, the utility of any agent from action $a$ in state $\omega_k$ is $u(a,\omega_k)=\mathbbm{1}\{a=a_{k}\}$. The timing is as follows:
+\begin{itemize}
+    \item CB chooses $\pi$;
+    \item Each receiver devoting attention receive a message $s$, that is a realization from $\pi$.
+    \item Each receiver takes an optimal action.
+\end{itemize}
+In the last stage (TO BE SUBSTITUTED WITH THE EQUILIBRIUM SOLUTION OF A MACRO MODEL), each receiver takes an optimal action $\sigma(\mu)$ defined as follows:
+$$\sigma(\mu)=\left\{\begin{array}{cc}
+  a_1   &  \mbox{if } \mu\geq \frac{1}{2}\\
+  a_2   &  \mbox{otherwise}
+\end{array}\right.$$
+The belief $\mu$ depends on whether a receiver devotes attention to $\pi$. In particular,
+$$\mu=\left\{\begin{array}{cc}
+  \mu(s)   &  \mbox{if } c_i\geq c(\pi)\\
+  \mu_0   &  \mbox{otherwise}
+\end{array}\right.$$
+In the first stage, CB chooses $\pi$ to maximize the following objective function:
+$$U(\pi)=\mu_0^mF(c(\pi))+\lambda(\pi)[1-F(c(\pi))]$$
+where
+$$\lambda(\pi)=E_\pi[u(\sigma(\mu(s)),\omega)]=\sum_s\sum_{\omega_k}\pi(s|\omega_k)\mu_0(\omega_k)\mathbbm{1}\{\sigma(\mu(s))=a_{k}\}$$
+is the expected payoff from receivers who are devoting attention and $\mu_0^m=\max_{\omega}\mu_0(\omega)$ is the prior of the most plausible state.
+
+The optimal $\pi$ must be such that the two messages $s_1,s_2$ are recommendations to take actions $a_1,a_2$, respectively. Assume by contradiction that $s_1,s_2$ imply the same action. This increases the cost of $\pi$ (decreases attention) without $\lambda(\pi)$ respect to the benchmark of an uninformative $\pi$. Thus, $\pi$ cannot be optimal. 
+
+It follows that for the optimal $\pi$ it must hold $\mu(s_1)\geq \frac{1}{2}$ and $\mu(s_2)\leq\frac{1}{2}$. This is equivalent to impose
+$$\pi(s_1|\omega_1)-\phi\pi(s_1|\omega_2)\geq \max\{0,1-\phi\}$$
+where $\phi=\frac{\mu_0(\omega_2)}{\mu_0(\omega_1)}$.
+
+\begin{assumption}
+    It holds that $F(\chi H(\mu_0))=1$ and $\mu_0(\omega_1)=\frac{1}{2}$ (or equivalently $\phi=1$).
+\end{assumption}
+It follows that
+$$\lambda(\pi)=\frac{1}{2}(x_1+x_2)$$
+where $x_1=\pi(s_1|\omega_1)$ and $x_2=\pi(s_2|\omega_2)$. It must also hold that $x_1+x_2>1$. Note also that
+$$\mu(s_1)=\frac{x_1}{x_1+1-x_2} \quad \mu(s_2)=\frac{1-x_1}{x_2+1-x_1}\quad H(\mu_0)=\ln(2)$$
+$$H(\mu(s_1))=-\left[\frac{x_1\ln(x_1)+(1-x_2)\ln(1-x_2)}{x_1+1-x_2}-\ln(x_1+1-x_2)\right]$$
+$$H(\mu(s_2))=-\left[\frac{x_2\ln(x_2)+(1-x_1)\ln(1-x_1)}{x_2+1-x_1}-\ln(x_2+1-x_1)\right]$$
+$$c(\pi)=\chi[\ln(2)-\pi(s_1)H(\mu(s_1))-\pi(s_2)H(\mu(s_2))]$$
+$$\pi(s_1)=\frac{1}{2}(x_1+1-x_2) \quad \pi(s_2)=\frac{1}{2}(x_2+1-x_1)$$
+The CB's problem is:
+$$\max_{x_1,x_2} U(\pi)$$
+and the corresponding F.O.C. for $x_1,x_2$ is:
+$$\frac{1}{2}\left[1-F(c(\pi))-(x_1+x_2-1)f(c(\pi))c^\prime(\pi)\right]=0$$
+Because of symmetry, the solution is $x_1=x_2=x$ such that:
+$$x=\frac{1}{2}+\frac{1}{2h(c(\pi))c^\prime(\pi)}$$
+where $h(c(\pi))=\frac{f(c(\pi))}{1-F(c(\pi))}$ is the hazard function.
+Note that $x>\frac{1}{2}$ if and only if $c^\prime(\pi)>0$.
+The marginal cost of information has the following expression:
+$$c^\prime(\pi)=\frac{\partial c(\pi)}{\partial x_1}=-\chi\left[\pi(s_1)H^\prime(\mu(s_1))+\pi(s_2)H^\prime(\mu(s_2))+\frac{1}{2}(H(\mu(s_1)-H(\mu(s_2))\right]$$
+where 
+$$H^\prime(\mu(s_1))=\frac{\partial H(\mu(s_1))}{\partial x_1}=-\left[\frac{(1-x_2)(\ln(x_1)-\ln(1-x_2))}{(x_1+1-x_2)^2}\right]<0$$
+$$H^\prime(\mu(s_2))=\frac{\partial H(\mu(s_2))}{\partial x_1}=-\left[\frac{x_2(\ln(x_2)-\ln(1-x_1))}{(x_2+1-x_1)^2}\right]<0$$
+Because of symmetry, it holds that
+$$c^\prime(\pi)=\frac{\chi}{2}\ln\left(\frac{x}{1-x}\right)$$
+$$H(\mu(s_1))=H(\mu(s_2))=-[x\ln(x)+(1-x)\ln(1-x)]$$
+$$c(\pi)=\chi[\ln(2)+x\ln(x)+(1-x)\ln(1-x)]$$
+\begin{assumption}
+    Attention is uniformly distributed: $F(\cdot)=U[0,1]$. Therefore, it must hold $\chi=\frac{1}{\ln(2)}$. 
+\end{assumption}
+From the previous assumption it holds that $h(c(\pi))=\frac{1}{1-c(\pi)}$. Therefore, it follows that:
+$$x=\frac{1}{2}+\frac{1-c(\pi)}{2c^\prime(\pi)}=\frac{1}{2}-\frac{x\ln(x)+(1-x)\ln(1-x)}{\ln\left(\frac{x}{1-x}\right)}$$
+Therefore, the optimal $x$ must solve:
+$$\frac{4x-3}{4x-1}=\frac{\ln(x)}{\ln(1-x)}$$
+and the solution is $x\approx 0.817$. In other words, the optimal $\pi$ by CB has the following design:
+$$\pi(s_1|\omega_1)=\pi(s_2|\omega_2)\approx 0.817 \quad \pi(s_1|\omega_2)=\pi(s_2|\omega_1)\approx 0.183$$
+The CB provides recommendations that are quite often correct, but not perfect. The probability of a mistake is close to $20\%$. This is done to keep the level of complexity of the recommendations to an acceptable level for an optimal audience. Such an audience is actually not small. Indeed, the cost of the optimal $\pi$ is $c(\pi)=0.3134$. Therefore, the audience is $1-c(\pi)=0.6866$.
+\end{document}

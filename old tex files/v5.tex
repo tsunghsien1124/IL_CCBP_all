@@ -1,0 +1,596 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{mathpazo}
+\usepackage{bbm}
+\usepackage{setspace}
+\usepackage[longnamesfirst]{natbib}
+\usepackage[colorlinks=true,citecolor=blue]{hyperref}
+\allowdisplaybreaks
+\newcommand{\RomanNumeralCaps}[1]{\MakeUppercase{\romannumeral #1}}
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+\newtheorem{example}{Example}
+
+\title{"Whatever it takes": a good communication strategy?}
+\author{Federico Innocenti \and Tsung-Hsien Li}
+\date{\today}
+
+\begin{document}
+
+\setstretch{1.25}
+\setlength{\parskip}{2mm}
+
+\maketitle
+
+\section{Introduction}
+
+Communication helps central banks with expectation management \citep{Casiraghi2022}. Almost all countries practice the inflation targeting regime in which how market participants form their expected inflation determines the effectiveness of monetary policy. A central bank can communicate with signals in favor of its policy objective; however, it is also costly for market participants to process information \citep{Sims2003}. Therefore, central banks face a trade-off between policy capacity and popularity. We study the central bank's communication strategy with rationally inattentive households to characterize what factors affect this trade-off.
+
+We contribute to the literature on Bayesian persuasion - pioneered by \cite{aumann1995repeated} and \cite{KG2011}. In particular, we study the problem of a Sender - i.e., a Central Bank - that designs information to help rationally inattentive \citep{Sims2003} receivers - i.e., households - to make decisions. Several papers have incorporated limited attention into the standard Bayesian persuasion framework. See, for instance, \cite{Bloedel2020,Lipnowski2020,lipnowski2022,Wei2021,Matyskova2021,innocenti2022can}. Our approach has similarities with these papers, but we tailor it to the problem of a Central Bank. We assume that attention costs are in the form of Shannon entropy and households are heterogeneous in their capacity to devote attention. Central Bank and households have (partially) aligned interests: the Central Bank tries to guide households toward the correct decisions. The Central Bank can provide perfectly informative reports about the state of the economy but faces the constraint that no one would process the information embodied in these reports. The Central Bank designs information to balance the desire to inform the public and the need for the public to be capable of understanding the information provided. Therefore, in contrast with the previously mentioned papers, we interpret attention as a budget households can spend to manage information's (endogenous) complexity.
+
+A few papers use Bayesian persuasion to study the optimal central bank communication. The closest is \cite{Ko2022}. She studies how the central bank informs households about future uncertainty of economic conditions to influence the inflation expectation of the private sector, namely forward guidance. In her model, the central bank receives a private signal of the evolution of the underlying state and decides whether and to what extent to reveal her private information. The optimal information design depends on the type of monetary policy (unemployment vs inflation targeting) and economic prospects (weak vs strong). By contrast, we do not rely on Sender's private information - in line with standard Bayesian persuasion - but we obtain comparable predictions because rational inattention by households does not allow the Central Bank to fully reveal the state of the economy - even the Central Bank could in principle.
+\cite{Herbert2021} studies Bayesian persuasion when receivers have heterogeneous priors. Within this framework, she studies how the central bank communicates with firms to influence their investment decisions in the presence of coordination externalities. By contrast, in our setting, households have the same prior beliefs. However, they can end up with different posterior beliefs depending on whether they devote attention to the information the Central Bank provides.
+
+\section{Model}
+
+There are payoff-relevant states of the world and actions. We define with $\Omega$ and $A$ the set of states and actions, respectively. There are two types of agents: a unit mass of receivers (households, hereafter HHs) and a sender (the central bank, hereafter CB). HHs and CB share the same prior belief $\mu_0 \in \Delta(\Omega)$.\footnote{$\Delta(X)$ denotes the set of all probability distributions on $X$.} The CB provides information $\pi$, which consists of the set of messages $S$ and a family of distributions $\{\pi(\cdot|\omega)\}_{\omega\in\Omega}$ over $S$. In other words, $\pi: \Omega \to \Delta(S)$. Each message $s$ leads to a posterior belief $\mu_s$. As a result, $\pi$ induces a distribution of posteriors $\{\mu_s\}_{s \in S}$, denoted by $\tau \in \Delta(\Delta(\Omega))$. The martingale property or Bayes plausibility condition hold: $\mathbb{E}_{\tau}(\mu_s)=\mu_0$. All other variables without explicitly mentioned are defined \`{a} la the Bayesian persuasion literature.
+
+Each receiver $i$ has an attention budget $c_i$, which is distributed according to $F(\cdot)$. Receiver $i$ devotes attention to the information $\pi$ provided by the CB if and only if $c(\pi)<c_i$, where $c(\pi)$ is the cost of processing information. In particular,
+\begin{align}
+\label{cost}
+    c(\pi; \chi, \mu_0) = \chi\left[H(\mu_0)-\sum_{s \in S}\tau(\mu_s) H(\mu_s)\right],
+\end{align}
+where $H(\cdot)$ is the Shannon entropy defined as:
+\begin{align}
+    H(\mu) & = -\sum_{\omega\in\Omega}\mu(\omega)\ln(\mu(\omega)),
+    % & = -[\mu(\omega_1)\ln(\mu(\omega_1))+\mu(\omega_2)\ln(\mu(\omega_2))], \\
+    % & = -[\mu(\omega_1)\ln(\mu(\omega_1))+(1-\mu(\omega_1))\ln(1-\mu(\omega_1))];
+\end{align}
+and $\tau$ is defined as:
+\begin{align}
+\label{tau}
+    \tau(\mu_s) = \sum_{\omega'\in\Omega}\pi(s|\omega')\mu_0(\omega'),
+\end{align}
+and $\mu_s$ is defined as:
+\begin{align}
+    % \mu_s(\omega) = \frac{\pi(s|\omega)\mu_0(\omega)}{\pi(s|\omega_1)\mu_0(\omega_1)+\pi(s|\omega_2)\mu_0(\omega_2)},
+    \mu_s(\omega) = \frac{\pi(s|\omega)\mu_0(\omega)}{\sum_{\omega'\in\Omega}\pi(s|\omega')\mu_0(\omega')},
+\end{align}
+for any message $s\in S$, and $\chi>0$ is a parameter. It follows that the mass of receivers paying attention to CB is $1-F(c(\pi))$. The posterior beliefs of receivers not paying attention remain as the common prior belief $\mu_0$. When $\pi$ is uninformative (i.e., $\mu_s = \mu_0$ for any $s\in S$), $c(\pi)=0$. Instead, when $\pi$ is perfectly informative (i.e., for any $s \in S$ there exists $\omega^* \in \Omega$ such that $\mu_s(\omega^*)=1$), $H(\mu_s)=0$ for any $s\in S$ and hence $c(\pi)=\chi H(\mu_0)$.
+
+Each receiver has a utility function $u(a,\omega)$. As her optimal action depends on her posterior belief $\sigma(\mu)$, her utility can be written as $\hat{u}(\mu)=\mathbb{E}_\mu u(\sigma(\mu),\omega)$. We assume that CB is benevolent and its objective is to maximize the sum of receivers' utility, i.e., $U = \int_i u_i(a,\omega)$. Thanks to the aforementioned threshold rule for information acquisition, CB's utility function can be expressed as:
+\begin{align}
+   U(\pi) & = \int_{\{i:\, c(\pi) \geq c_i\}} \hat{u}(\mu_0) + \int_{\{i:\, c(\pi) < c_i\}} \mathbb{E}_\tau(\hat{u}(\mu_s)), \\
+   & = \hat{u}(\mu_0)F(c(\pi)) + \mathbb{E}_\tau(\hat{u}(\mu_s))(1-F(c(\pi))).
+\end{align}
+
+The timing is as follows:
+\begin{itemize}
+    \item CB chooses information $\pi$.
+    \item Each receiver devoting attention receives a message $s$. % a realization from $\pi$.
+    \item Each receiver takes an optimal action $\sigma(\mu)$.
+\end{itemize}
+
+\begin{example}
+    There are two payoff-relevant states of the world and two actions. In particular, $\Omega=\{\omega_1,\omega_2\}$ and $A=\{a_1,a_2\}$. The utility of any receiver is $u(a,\omega_k)=\mathbbm{1}\{a=a_{k}\}$. In the last stage, each receiver thus takes an optimal action $\sigma(\mu)$ defined as follows: 
+    \begin{align}
+        \sigma(\mu)=\left\{\begin{array}{ll}
+        a_1   &  \mbox{if } \mu(\omega_1)\geq \frac{1}{2}\\
+        a_2   &  \mbox{otherwise}
+        \end{array}\right.,
+    \end{align}
+    or $\sigma(\mu) = a_{\arg\max_i\mu(\omega_i)}$. CB's information $\pi$ consists of two messages $S=\{s_1,s_2\}$.
+\end{example}
+
+The practically relevant situations include firms' factory investment, mutual fund managers' management, or household consumption. These agents aim to make the right state-dependent decision. For example, a firm would like to build a new factory when the economy is good; a fund manager opts for a growth investment strategy when she expects the economy to expand; a household consumes more today to smooth consumption if expecting a booming economy so higher future income. The central bank can guide the behavior of these agents by providing information messages.
+
+% The belief $\mu$ depends on whether a receiver devotes attention to $\pi$. In particular,
+% $$\mu=\left\{\begin{array}{ll}
+%   \mu(s)   &  \mbox{if } c_i\geq c(\pi)\\
+%   \mu_0   &  \mbox{otherwise}
+% \end{array}\right..$$
+
+In the first stage, CB chooses $\pi$ to maximize the following function:
+\begin{align}
+    U(\pi)=\hat{u}(\mu_0)F(c(\pi)) + \mathbb{E}_\tau(\hat{u}(\mu_s))(1-F(c(\pi))),
+\end{align}
+where $\hat{u}(\mu_0)=\mu_0^m\equiv\max_{\omega}\mu_0(\omega)$ is the prior of the most plausible state and the expected payoff from receivers devoting attention $\mathbb{E}_\tau(\hat{u}(\mu_s))$ can be spelled out as:
+\begin{align}
+    \mathbb{E}_\tau(\hat{u}(\mu_s)) = \tau(\mu_{s_1})\mu^m_{s_1} + \tau(\mu_{s_2})\mu^m_{s_2}.
+\end{align}
+
+The optimal $\pi$ must be such that the two messages $s_1,s_2$ are recommendations to take actions $a_1,a_2$, respectively. Assume by contradiction that $s_1,s_2$ imply the same action, for instance, action $a_1$. This is possible only if $\hat{u}(\mu_0)=\mu_0(\omega_1)$. It follows that
+$$\mathbb{E}_\tau(\hat{u}(\mu_s)) =\hat{u}(\mu_0)$$
+Thus, pooling increases the cost of $\pi$ (decreases attention) without producing any benefit respect to the benchmark of an uninformative $\pi$. Thus, $\pi$ cannot be optimal. In other words, $\pi$ must be separating. 
+
+It follows that for the optimal $\pi$ it must hold $\mu_{s_1}(\omega_1)\geq\frac{1}{2}$ and $\mu_{s_2}(\omega_1)\leq\frac{1}{2}$. This is equivalent to imposing:
+\begin{align}
+    \pi(s_1|\omega_1)-\phi\pi(s_1|\omega_2)\geq \max\{0,1-\phi\},
+\end{align}
+where $\phi=\frac{\mu_0(\omega_2)}{\mu_0(\omega_1)}$. It follows that:
+\begin{equation}
+    \mathbb{E}_\tau(\hat{u}(\mu_s)) = \tau(\mu_{s_1})\mu_{s_1}(\omega_1) + \tau(\mu_{s_2})\mu_{s_2}(\omega_2).
+\end{equation}
+
+\begin{assumption}
+\label{Ass1}
+    $F(\chi H(\mu_0))=1$ and $\mu_0(\omega_1)=\frac{1}{2}$ (or equivalently $\phi=1$).
+\end{assumption}
+
+Therefore, $\hat{u}(\mu_0) = \frac{1}{2}$. Let $x_1=\pi(s_1|\omega_1)$ and $x_2=\pi(s_2|\omega_2)$ and note that it must hold that $x_1+x_2>1$. It follows that:
+\begin{align}
+    \label{taus1}
+    \tau(\mu_{s_1}) & = \frac{1}{2}(x_1 + 1-x_2), \\
+    \label{mus1}
+    \mu_{s_1}(\omega_1) & = \frac{x_1}{x_1 + 1-x_2}, \\
+    \label{taus2}
+    \tau(\mu_{s_2}) & = \frac{1}{2}(1-x_1 + x_2), \\
+    \label{mus2}
+    \mu_{s_2}(\omega_2) & = \frac{x_2}{1-x_1 + x_2}, \\
+     \mathbb{E}_\tau(\hat{u}(\mu_s)) & = \frac{1}{2}(x_1+x_2), \\
+     H(\mu_0) & = \ln(2), \\
+     H(\mu_{s_1}) & = -\left[\frac{x_1\ln(x_1)+(1-x_2)\ln(1-x_2)}{x_1+1-x_2}-\ln(x_1+1-x_2)\right], \\
+     H(\mu_{s_2}) & = -\left[\frac{(1-x_1)\ln(1-x_1)+x_2\ln(x_2)}{1-x_1+x_2}-\ln(1-x_1+x_2)\right], \\
+     c(\pi) & = \chi\left[\ln(2)-\tau(\mu_{s_1})H(\mu_{s_1})-\tau(\mu_{s_2})H(\mu_{s_2})\right].
+\end{align}
+
+The CB's maximization problem is thus given by:
+\begin{align}
+    \max_{x_1,x_2} \left[\frac{1}{2}F(c(\pi)) + \frac{1}{2}(x_1+x_2)(1-F(c(\pi)))\right].
+\end{align}
+The corresponding FOCs for $x_1,x_2$ are:
+\begin{align}
+    \frac{1}{2}\left[1-F(c(\pi))-(x_1+x_2-1)f(c(\pi))c^\prime(\pi)\right]=0,
+\end{align}
+where the marginal cost of information $c^\prime(\pi)$ has the following expression:
+\begin{align}
+    c^\prime(\pi) & =\frac{\partial c(\pi)}{\partial x_k} \\
+    & = -\chi \sum_{j=1,2} \left[\frac{\partial \tau_{\mu_{s_j}}}{\partial x_k}H(\mu_{s_j}) + \tau_{\mu_{s_j}}\frac{\partial H(\mu_{s_j})}{\partial x_k}\right].
+    % & = -\chi\left[\pi(s_1)H^\prime(\mu(s_1))+\pi(s_2)H^\prime(\mu(s_2))+\frac{1}{2}(H(\mu(s_1)-H(\mu(s_2))\right]
+\end{align}
+Observe that:
+\begin{align}
+    \frac{\partial \tau_{\mu_{s_j}}}{\partial x_k} & = \left\{\begin{array}{ll}
+        \frac{1}{2} & \mbox{if } j = k\\
+        -\frac{1}{2} & \mbox{otherwise}
+        \end{array}\right., \\
+    \frac{\partial H(\mu_{s_j})}{\partial x_k} & = \left\{\begin{array}{ll}
+        -\frac{(1-x_l)[\ln(x_j)-\ln(1-x_l)]}{(x_j+1-x_l)^2} & \mbox{if } j = k\\
+        -\frac{x_j[\ln(x_j)-\ln(1-x_k)]}{(x_j+1-x_k)^2} & \mbox{otherwise}
+        \end{array}\right.,
+\end{align}
+where 
+\begin{align}
+    H^\prime(\mu(s_1)) & =\frac{\partial H(\mu(s_1))}{\partial x_1}=-\left[\frac{(1-x_2)(\ln(x_1)-\ln(1-x_2))}{(x_1+1-x_2)^2}\right]<0, \\
+    H^\prime(\mu(s_2)) & =\frac{\partial H(\mu(s_2))}{\partial x_1}=-\left[\frac{x_2(\ln(x_2)-\ln(1-x_1))}{(x_2+1-x_1)^2}\right]<0.
+\end{align}
+Symmetry $x_1=x_2=x$ implies:
+\begin{align}
+    x=\frac{1}{2}\left[1+\frac{1}{h(c(\pi))c^\prime(\pi)}\right],
+\end{align}
+where $h(c(\pi))=\frac{f(c(\pi))}{1-F(c(\pi))}$ denotes the hazard function. Note that $x>\frac{1}{2}$ if and only if $c^\prime(\pi)>0$. 
+Because of symmetry, it holds that:
+\begin{align} 
+    \label{cprime}
+    c^\prime(\pi) & = \frac{\chi}{2}\ln\left(\frac{x}{1-x}\right), \\
+    H(\mu(s_1)) & = H(\mu(s_2))=-[x\ln(x)+(1-x)\ln(1-x)], \\
+    \label{c}
+    c(\pi) & = \chi[\ln(2)+x\ln(x)+(1-x)\ln(1-x)].
+\end{align}
+\begin{assumption}
+\label{Ass2}
+    Attention is uniformly distributed: $F(\cdot)=U[0,1]$. Therefore, it must hold $\chi=\frac{1}{\ln(2)}$. 
+\end{assumption}
+From the previous assumption it holds that $h(c(\pi))=\frac{1}{1-c(\pi)}$. Therefore, it follows that:
+\begin{align}
+    x=\frac{1}{2}+\frac{1-c(\pi)}{2c^\prime(\pi)}=\frac{1}{2}-\frac{x\ln(x)+(1-x)\ln(1-x)}{\ln\left(\frac{x}{1-x}\right)}.
+\end{align}
+Therefore, the optimal $x$ must solve:
+\begin{align}
+    \frac{4x-3}{4x-1}=\frac{\ln(x)}{\ln(1-x)}.
+\end{align}
+and the solution is $x\approx 0.8173$. In other words, the optimal $\pi$ by CB has the following design:
+\begin{align}
+    \pi(s_1|\omega_1) & = \pi(s_2|\omega_2)\approx 0.8173, \\
+    \pi(s_1|\omega_2) & = \pi(s_2|\omega_1)\approx 0.1827.
+\end{align}
+The CB provides recommendations that are pretty often correct, but not perfect. The probability of a mistake is close to $20\%$. This is done to keep the level of complexity of the recommendations to an acceptable level for an optimal audience. Such an audience is not small. Indeed, the cost of the optimal $\pi$ is $c(\pi)=0.3141$. Therefore, the audience is $1-c(\pi)=0.6859$. The aggregate utility with CB communication is $0.5 \times 0.3141 + 0.8173 \times  0.6859 = 0.7176$, which is higher than 0.5 without disclosure.
+
+\begin{example}
+    The cost of acquiring information is NOT a sunk cost. Thus, the expected utility function of a receiver devoting attention is $\mathbb{E}_{\tau}(\hat{u}(\mu_s))-c(\pi)$. Otherwise, the same as in Example 1.
+\end{example}
+
+The CB's maximization problem is thus given by:
+\begin{align}
+    \max_{x_1,x_2} \left[\frac{1}{2}F(c(\pi)) + \left(\frac{1}{2}(x_1+x_2)-c(\pi)\right)(1-F(c(\pi)))\right].
+\end{align}
+The corresponding FOCs for $x_1,x_2$ are:
+\begin{align}
+    (1-2c'(\pi))(1-F(c(\pi)))=(x_1+x_2-1-2c(\pi))f(c(\pi))c^\prime(\pi).
+\end{align}
+It follows that:
+\begin{align}
+    (1-2c'(\pi))(1-c(\pi)) & = (x_1+x_2-1-2c(\pi))c^\prime(\pi).
+\end{align}
+Symmetry implies:
+\begin{align}
+    (1-2c'(\pi))(1-c(\pi)) & = (2x-1-2c(\pi))c^\prime(\pi), \\
+    c(\pi) & = \chi[\ln(2)+x\ln(x)+(1-x)\ln(1-x)], \\
+    c^\prime(\pi) & = \frac{\chi}{2}[\ln(x)-\ln(1-x)].
+\end{align}
+Therefore, the optimal $\pi$ has the following design:
+\begin{align}
+    \pi(s_1|\omega_1) = \pi(s_2|\omega_2) & \approx 0.6357, \\
+    \pi(s_1|\omega_2) = \pi(s_2|\omega_1) & \approx 0.3463, \\
+    c(\pi) & = 0.0693.
+\end{align}
+When the cost of information acquisition is internalized, the CB sends fuzzier messages to lower the information costs, thus attracting more attention. The share of receivers paying attention soars to 0.9307, way higher than 0.6859. It may seem puzzling that the share increased by far. However, when the cost is embedded in utility, decreasing the information cost is equivalent to increasing the utility of receivers. As a result of vague messages from CB, the share of attentive receivers rises. The aggregate utility with CB communication is $0.5 \times 0.0693 + (0.6357-0.0693) \times  0.9307 = 0.5618$, which is higher than 0.5 without disclosure. 
+
+\subsection{Macro application}
+
+Central bank often communicates with households to influence their inflation expectations so that households end up choosing good actions such that the targeted inflation is achieved. In this scenario, the central bank's interests do not perfectly align with those of the households. In particular, following \cite{Ko2022}, we define the utility of households $u_h$ and the utility of the central bank $u_c$ as follows:
+\begin{align}
+    \label{uh}
+    u_h & = -\left(x^e - x\right)^2 \\
+    \label{uc}
+    u_c & = -\left[\omega+\gamma(x^e-x)\right]^2-\alpha(x-x^T)^2
+\end{align}
+where
+\begin{align*}
+    x & = \mbox{Inflation} \\
+    x^e & = \mbox{Expected inflation} \\
+    x^T & = \mbox{Inflation target} \\
+    \omega & = \mbox{State of the economy}\\
+    \gamma & = \mbox{Effect of inflation surprise on unemployment} \\
+    \alpha & = \mbox{Relative importance of the inflation gap} 
+\end{align*}
+The state of the economy is binary: $\omega\in\Omega\coloneqq\{\omega_w,\omega_s\}$. Each agent has the same prior belief $\mu_0$ about the state being $\omega_w$. Inflation $x$ is set by the central bank as a function of the state of the economy: 
+\begin{equation}
+    x(\omega)=\left\{
+    \begin{array}{cc}
+      x^T+v   &  \mbox{If } \omega=\omega_w\\
+      x^T-v   &  \mbox{If } \omega=\omega_s
+    \end{array}
+    \right.
+\end{equation}
+$x^T$, $\gamma$, $\alpha$ and $v$ are all parameters. Households form expectation $x^e$ about inflation using the information provided by the central bank. Differently from \cite{Ko2022}, we assume that the central bank generates information conditioning directly on the state $\omega$ - in the original spirit of Bayesian persuasion \citep{KG2011}. By contrast, \cite{Ko2022} assumes that the central bank has imperfect private information (i.e., a forecast of the economy) and produces information for the household conditional on the realization of this private signal. This assumption binds the central bank and avoid a perfect revelation of the state in her model. It is justified with the inherent uncertainty about the the state of the economy. We do not require such assumption. We can allow the central bank to produce perfectly informative signals of $\omega$. As we will explain in the following, the central bank finds it optimal to provide imperfect information to account for the costs that households have to pay to process complex information - and revealing the state would involve writing quite technical reports. Therefore, we define an information structure - in the language of \cite{Ko2022}, a forward-guidance policy function - as follows: 
+\begin{equation}
+    \pi \colon \Omega \to \Delta(S)
+\end{equation}
+where $S=\{s_w,s_s\}$ is the set of signals - which are limited to two, without loss of generality. The central bank chooses $\pi$ to maximize its utility given by \eqref{uc}, taking into consideration that, for any $\pi$, each household $i$ processes the corresponding information if and only if her attention budget allows it, i.e., $c(\pi)< c_i$. Given $\pi$ and a signal realization $s$, each household processing information forms a posterior belief $\mu_s$ using Bayesian updating:
+\begin{equation}
+     \mu_s = \frac{\pi(s|\omega_w)\mu_0}{\pi(s|\omega_w)\mu_0+\pi(s|\omega_s)(1-\mu_0)}
+\end{equation}
+Instead, households who do not process information do not change their beliefs i.e., $\mu_s=\mu_0$ for any $s\in S$. Finally, given $\mu_s$, each household forms an expectation of inflation $x^e$ to maximize her utility given by \eqref{uh}. We solve the model by backward induction. Therefore, we define expected inflation as follows:
+\begin{equation}
+    x^e(\mu_s)=x^T+v(2\mu_s-1)
+\end{equation}
+\begin{proof}
+    Each household maximizes her expected utility (i.e., the expectation of \eqref{uh}) taking $x^e$ as choice variable, that is:
+    \begin{equation}
+    \label{maxh}
+        \max_{x^e}  \mathbb{E}_{\mu_s}\left[-\left(x^e - x\right)^2\right]
+    \end{equation}
+    Given a posterior belief $\mu_s$, \eqref{maxh} becomes:
+    \begin{equation}
+    \label{maxh2}
+        \max_{x^e}  -\mu_s\left(x^e - x(\omega_w)\right)^2-(1-\mu_s)\left(x^e - x(\omega_s)\right)^2
+    \end{equation}
+    The F.O.C. of \eqref{maxh2} is:
+    \begin{equation*}
+        \mu_s\left(x^e - x(\omega_w)\right)+(1-\mu_s)\left(x^e - x(\omega_s)\right)=0
+    \end{equation*}
+    Thus, the expected inflation is:
+    \begin{equation*}
+        x^e=\mathbb{E}_{\mu_s}[x]=\mu_sx(\omega_w)+(1-\mu_s)x(\omega_s)=x^T+v(2\mu_s-1)
+    \end{equation*}
+\end{proof}
+Assuming that the attention budget $c_i$ is distributed according to a distribution $F(\cdot)$, for any information structure $\pi$ only a fraction of household - that is, $1-F(c(\pi))$ where $c(\cdot)$ is given by \eqref{cost} - process information. For the remaing households - that is, $F(c(\pi))$ - the expected inflation is $x^e(\mu_0)$. Therefore, the central bank chooses $\pi$ to maximize the following:
+\begin{align}
+    \label{expected_uc}
+    U(\pi)=\mathbb{E}_{\mu_0}\left[u_c(\mu_0)F(c(\pi)) + \mathbb{E}_\tau[u_c(\mu_s)](1-F(c(\pi)))\right]
+\end{align}
+The second component in \eqref{uc} does not depend on the expected inflation $x^e$. Therefore, it is irrelevant for the central bank when designing the optimal information structure $\pi$. In other words, following \eqref{expected_uc}, the central bank solves the following minimization problem:
+\begin{equation}
+\label{minproblem}
+    \begin{split}
+    \min_{\pi} \ & \ \sum_{\omega\in\Omega}\mu_0(\omega)\Big\{F(c(\pi))\left\{\omega+\gamma\left[x^e(\mu_0)-x(\omega)\right]\right\}^2+\\
+    \ & \ +(1-F(c(\pi)))\sum_{s=1}^{2}\tau_s\left\{\omega+\gamma\left[x^e(\mu_s)-x(\omega)\right]\right\}^2\Big\}
+    \end{split}
+\end{equation}
+subject to $\mathbb{E}_{\tau}(\mu_s)=\mu_0$. Following Assumptions \ref{Ass1}-\ref{Ass2} and conditions \eqref{taus1}-\eqref{mus2}, we rewrite \eqref{minproblem} as follows:
+\begin{small}
+    \begin{equation}
+    \begin{split}
+    \min_{\pi} \ & \ c(\pi)\left[(\omega_w-\gamma v)^2+(\omega_s+\gamma v)^2\right]+\\
+     &  +\frac{1}{2}(x_1 + 1-x_2)(1-c(\pi))\left\{\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+     & +\frac{1}{2}(1-x_1 + x_2)(1-c(\pi))\left\{\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}
+    \end{split}
+    \end{equation}
+\end{small}
+The corresponding F.O.C.s are:
+\begin{eqnarray}
+\label{focx1gen}
+    \begin{split}
+        c^\prime(\pi)\left[(\omega_w-\gamma v)^2+(\omega_s+\gamma v)^2\right]+ \\
+        +\frac{1}{2}(1-c(\pi))\left\{\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\frac{1}{2}(x_1 + 1-x_2)c^\prime(\pi)\left\{\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        +2\gamma v(x_1 + 1-x_2)(1-c(\pi))\Bigg\{\left[\omega_w+\omega_s+2\gamma v\left(\frac{x_1+x_2-1}{x_1+1-x_2}\right)\right]\left[\frac{1-x_2}{(x_1+1-x_2)^2}\right]\Bigg\}+\\
+        -\frac{1}{2}(1-c(\pi))\left\{\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -\frac{1}{2}(1-x_1 + x_2)c^\prime(\pi)\left\{\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -2\gamma v(1-x_1 + x_2)(1-c(\pi))\Bigg\{\left[\omega_w+\omega_s-2\gamma v\left(\frac{x_1+x_2-1}{1-x_1+x_2}\right)\right]\left[\frac{x_2}{(1-x_1+x_2)^2}\right]\Bigg\}=0
+    \end{split} \\
+    \label{focx2gen}
+    \begin{split}
+        c^\prime(\pi)\left[(\omega_w-\gamma v)^2+(\omega_s+\gamma v)^2\right]+ \\
+        -\frac{1}{2}(1-c(\pi))\left\{\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\frac{1}{2}(x_1 + 1-x_2)c^\prime(\pi)\left\{\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        +2\gamma v(x_1 + 1-x_2)(1-c(\pi))\Bigg\{\left[\omega_w+\omega_s+2\gamma v\left(\frac{x_1+x_2-1}{x_1+1-x_2}\right)\right]\left[\frac{x_1}{(x_1+1-x_2)^2}\right]\Bigg\}+\\
+        +\frac{1}{2}(1-c(\pi))\left\{\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -\frac{1}{2}(1-x_1 + x_2)c^\prime(\pi)\left\{\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -2\gamma v(1-x_1 + x_2)(1-c(\pi))\Bigg\{\left[\omega_w+\omega_s-2\gamma v\left(\frac{x_1+x_2-1}{1-x_1+x_2}\right)\right]\left[\frac{1-x_1}{(1-x_1+x_2)^2}\right]\Bigg\}=0
+    \end{split}
+\end{eqnarray}
+\begin{assumption}
+\label{Ass3}
+    The unemployment shocks are symmetric, that is $\omega_w=\omega$ and $\omega_s=-\omega$.
+\end{assumption}
+Under Assumption \ref{Ass3}, we rewrite the F.O.C.s \eqref{focx1gen}-\eqref{focx2gen} as follows:
+\begin{eqnarray}
+\label{focx1}
+    \begin{split}
+        2c^\prime(\pi)(\omega-\gamma v)^2+ \\
+        +\frac{1}{2}(1-c(\pi))\left\{\left[\omega-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega-2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\frac{1}{2}(x_1 + 1-x_2)c^\prime(\pi)\left\{\left[\omega-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega-2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\frac{1}{2}(1-c(\pi))\left\{\left[\omega-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega-2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -\frac{1}{2}(1-x_1 + x_2)c^\prime(\pi)\left\{\left[\omega-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega-2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        +4\gamma^2 v^2(x_1+x_2-1)(1-c(\pi))\left[\frac{x_2}{(1-x_1+x_2)^2}+\frac{1-x_2}{(x_1+1-x_2)^2}\right]=0
+    \end{split} \\
+    \label{focx2}
+    \begin{split}
+        2c^\prime(\pi)(\omega-\gamma v)^2+ \\
+        -\frac{1}{2}(1-c(\pi))\left\{\left[\omega-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega-2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\frac{1}{2}(x_1 + 1-x_2)c^\prime(\pi)\left\{\left[\omega-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+\left[\omega-2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        +\frac{1}{2}(1-c(\pi))\left\{\left[\omega-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega-2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -\frac{1}{2}(1-x_1 + x_2)c^\prime(\pi)\left\{\left[\omega-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+\left[\omega-2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        +4\gamma^2 v^2(x_1+x_2-1)(1-c(\pi))\left[\frac{x_1}{(x_1+1-x_2)^2}+\frac{1-x_1}{(1-x_1+x_2)^2}\right]=0
+    \end{split}
+\end{eqnarray}
+% The F.O.C.s in \eqref{focx1}-\eqref{focx2} are symmetric. Thus, we can assume that in equilibrium, it holds $x_1=x_2=x$. This allows to further simplify the F.O.C.s. We write the F.O.C. for the common $x$ as follows:
+% \begin{equation}
+%     \label{focx}
+%    c^\prime(\pi)\left\{2(\omega-\gamma v)^2-\left[\omega-2\gamma v\left(1-x\right)\right]^2-\left[\omega-2\gamma v x\right]^2\right\}+ 4\gamma^2 v^2(2x-1)(1-c(\pi))=0
+% \end{equation}
+% where $c(\pi)$ follows \eqref{c}, $c^\prime(\pi)$ follows \eqref{cprime} and $\chi=\frac{1}{\ln(2)}$. After some algebra, \eqref{focx} becomes:
+% \begin{equation}
+%     (2x-1)\left\{2[1-c(\pi)]-c^\prime(\pi)(2x-1)\right\}=0
+% \end{equation}
+% It turns out that $x=\frac{1}{2}$ is a minimum since $c^\prime(\pi)>0$ for any $x\in \left(\frac{1}{2},1\right]$. Therefore, there exists $\epsilon$ small enough such that the F.O.C. is positive for $x=\frac{1}{2}+\epsilon$. Then, we establish our first result:
+% \begin{proposition}
+%     When unemployment shocks and beliefs are symmetric, the best information policy for the CB is to be uninformative i.e., $x_1=x_2=x$.
+% \end{proposition}
+\begin{proposition}
+    When unemployment shocks and beliefs are symmetric, the best information policy for the CB is to be uninformative i.e., $x_1+x_2=1$.
+\end{proposition}
+\begin{proof}
+    Label each separate additive term in \eqref{focx1} from the top with (\RomanNumeralCaps{1}), the second top with (\RomanNumeralCaps{2}), and to the bottom with (\RomanNumeralCaps{6}). It is trivial that (\RomanNumeralCaps{6}) equals zero if plugging $x_1+x_2=1$. All fractions in (\RomanNumeralCaps{2}) and (\RomanNumeralCaps{4}) become one half after substituting $x_1+x_2=1$ so all terms in (\RomanNumeralCaps{2}) and (\RomanNumeralCaps{4}) get canceled out so their sum is zero. The remaining task is to show that  (\RomanNumeralCaps{1}), (\RomanNumeralCaps{3}), and (\RomanNumeralCaps{5}) amount to zero. (\RomanNumeralCaps{3}) and (\RomanNumeralCaps{5}) can be rewritten respectively as:
+    \begin{align}
+        \small 
+        -2x_1c^\prime(\pi)\left(\omega-\gamma v\right)^2 \\
+        -2(1-x_1)c^\prime(\pi)\left(\omega-\gamma v\right)^2
+    \end{align}
+    It follows that $\mbox{(\RomanNumeralCaps{1})}+\mbox{(\RomanNumeralCaps{3})}+\mbox{(\RomanNumeralCaps{5})}=0$. The above also holds for \eqref{focx2}. We argue numerically that $x_1+x_2=1$ indeed delivers a global minimum, marked with red dots in the following heatmap figure of the central bank's objective function evaluated at the proposed signals on both x- and y-axis. with $\mu_0=\mu_0^c=\frac{1}{2}$ as well as $\omega=1,10,100$.
+    \begin{figure}[htp!]
+    \caption{$\omega=1$}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/heatmap_homo_μ_0.5_ω_w_1.0_ω_s_-1.0.pdf}
+    \end{figure}
+    \begin{figure}[htp!]
+    \caption{$\omega=10$}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/heatmap_homo_μ_0.5_ω_w_10.0_ω_s_-10.0.pdf}
+    \end{figure}
+    \begin{figure}[htp!]
+    \caption{$\omega=100$}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/heatmap_homo_μ_0.5_ω_w_100.0_ω_s_-100.0.pdf}
+    \end{figure}
+\end{proof}
+\begin{proposition}
+    When unemployment shocks are asymmetric and beliefs are symmetric, the best information policy for the CB is to be uninformative i.e., $x_1+x_2=1$.
+\end{proposition}
+\begin{proof}
+    Label each separate additive term in \eqref{focx1gen} from the top with (\RomanNumeralCaps{1}), the second top with (\RomanNumeralCaps{2}), and to the bottom with (\RomanNumeralCaps{7}). It is trivial that both (\RomanNumeralCaps{4}) and (\RomanNumeralCaps{7}) equal zero if plugging $x_1+x_2=1$. All fractions in (\RomanNumeralCaps{2}) and (\RomanNumeralCaps{5}) become one half after substituting $x_1+x_2=1$ so all terms in (\RomanNumeralCaps{2}) and (\RomanNumeralCaps{5}) get canceled out so their sum is zero. The remaining task is to show that  (\RomanNumeralCaps{1}), (\RomanNumeralCaps{3}), and (\RomanNumeralCaps{6}) amount to zero. (\RomanNumeralCaps{3}) and (\RomanNumeralCaps{6}) can be rewritten respectively as:
+    \begin{align}
+        \small 
+        -x_1c^\prime(\pi)\left[(\omega_w-\gamma v)^2+(\omega_s+\gamma v)^2\right] \\
+        -(1-x_1)c^\prime(\pi)\left[(\omega_w-\gamma v)^2+(\omega_s+\gamma v)^2\right]
+    \end{align}
+    It follows that $\mbox{(\RomanNumeralCaps{1})}+\mbox{(\RomanNumeralCaps{3})}+\mbox{(\RomanNumeralCaps{6})}=0$. The above also holds for \eqref{focx2gen}. Likewise, we argue numerically that $x_1+x_2=1$ indeed delivers a global minimum, marked with red dots in the following heatmap figure of the central bank's objective function evaluated at the proposed signals on both x- and y-axis. with $\mu_0=\mu_0^c=\frac{1}{2}$ as well as $\omega_w=1$ combined additionally with $w_s=-10,-100$.
+    \begin{figure}[htp!]
+    \caption{$(\omega_w,\omega_s)=(1,-10)$}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/heatmap_homo_μ_0.5_ω_w_1.0_ω_s_-10.0.pdf}
+    \end{figure}
+    \begin{figure}[htp!]
+    \caption{$(\omega_w,\omega_s)=(1,-100)$}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/heatmap_homo_μ_0.5_ω_w_1.0_ω_s_-100.0.pdf}
+    \end{figure}
+\end{proof}
+
+SOCs? Uniqueness?
+
+I guess this property also holds for uniformly symmetric priors, i.e., for any $\mu_0 = \mu_0^c \in (0,1)$.
+
+\subsubsection{Heterogeneous priors}
+We relax the assumption that the central bank and households have the same prior belief about the state of the economy $\omega$. In particular, we assume that the central bank holds a prior belief $\mu_0^c\neq \frac{1}{2}$. We keep all other assumptions. Therefore, \eqref{minproblem} becomes:
+\begin{small}
+    \begin{equation}
+    \begin{split}
+    \min_{\pi} \ & \ c(\pi)\left[\mu_0^c(\omega_w-\gamma v)^2+(1-\mu_0^c)(\omega_s+\gamma v)^2\right]+\\
+     &  +\tau_{s_1}^c(1-c(\pi))\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+     & +\tau_{s_2}^c(1-c(\pi))\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}
+    \end{split}
+    \label{opt_heterogeneous_priors}
+    \end{equation}
+\end{small}
+where it follows from \eqref{tau} that:
+\begin{equation}
+    \tau_{s_1}^c=\mu_0^c x_1 + (1-\mu_0^c)(1-x_2)
+\end{equation}
+\begin{equation}
+    \tau_{s_2}^c=\mu_0^c (1-x_1) + (1-\mu_0^c)x_2
+\end{equation}
+The corresponding F.O.C.s are:
+\begin{small}
+\begin{eqnarray}
+\label{focx1gen2}
+    \begin{split}
+        c^\prime(\pi)\left[\mu_0^c(\omega_w-\gamma v)^2+(1-\mu_0^c)(\omega_s+\gamma v)^2\right]+ \\
+        +\mu_0^c(1-c(\pi))\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\tau_{s_1}^cc^\prime(\pi)\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        +4\gamma v\tau_{s_1}^c(1-c(\pi))\Bigg\{\left[\mu_0^c\omega_w+(1-\mu_0^c)\omega_s+2\gamma v\left(\frac{(1-\mu_0^c)x_1-\mu_0^c(1-x_2)}{x_1+1-x_2}\right)\right]\left[\frac{1-x_2}{(x_1+1-x_2)^2}\right]\Bigg\}+\\
+        -\mu_0^c(1-c(\pi))\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -\tau_{s_2}^cc^\prime(\pi)\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -4\gamma v\tau_{s_2}^c(1-c(\pi))\Bigg\{\left[\mu_0^c\omega_w+(1-\mu_0^c)\omega_s-2\gamma v\left(\frac{\mu_0^cx_2-(1-\mu_0^c)(1-x_1)}{1-x_1+x_2}\right)\right]\left[\frac{x_2}{(1-x_1+x_2)^2}\right]\Bigg\}=0
+    \end{split} \\
+    \label{focx2gen2}
+    \begin{split}
+        c^\prime(\pi)\left[\mu_0^c(\omega_w-\gamma v)^2+(1-\mu_0^c)(\omega_s+\gamma v)^2\right]+ \\
+        -(1-\mu_0^c)(1-c(\pi))\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\tau_{s_1}^cc^\prime(\pi)\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        +4\gamma v\tau_{s_1}^c(1-c(\pi))\Bigg\{\left[\mu_0^c\omega_w+(1-\mu_0^c)\omega_s+2\gamma v\left(\frac{(1-\mu_0^c)x_1-\mu_0^c(1-x_2)}{x_1+1-x_2}\right)\right]\left[\frac{x_1}{(x_1+1-x_2)^2}\right]\Bigg\}+\\
+        +(1-\mu_0^c)(1-c(\pi))\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -\tau_{s_2}^cc^\prime(\pi)\left\{\mu_0^c\left[\omega_w-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega_s+2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -4\gamma v\tau_{s_2}^c(1-c(\pi))\Bigg\{\left[\mu_0^c\omega_w+(1-\mu_0^c)\omega_s-2\gamma v\left(\frac{\mu_0^cx_2-(1-\mu_0^c)(1-x_1)}{1-x_1+x_2}\right)\right]\left[\frac{1-x_1}{(1-x_1+x_2)^2}\right]\Bigg\}=0
+    \end{split}
+\end{eqnarray}
+\end{small}
+Under Assumption \ref{Ass3}, we write \eqref{focx1gen2}-\eqref{focx2gen2} as follows:
+\begin{small}
+\begin{eqnarray}
+\label{focx12}
+    \begin{split}
+        c^\prime(\pi)\left[(\omega-\gamma v)^2\right]+ \\
+        +\mu_0^c(1-c(\pi))\left\{\mu_0^c\left[\omega-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega-2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\tau_{s_1}^cc^\prime(\pi)\left\{\mu_0^c\left[\omega-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega-2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        +4\gamma v\tau_{s_1}^c(1-c(\pi))\Bigg\{\left[(2\mu_0^c-1)\omega+2\gamma v\left(\frac{(1-\mu_0^c)x_1-\mu_0^c(1-x_2)}{x_1+1-x_2}\right)\right]\left[\frac{1-x_2}{(x_1+1-x_2)^2}\right]\Bigg\}+\\
+        -\mu_0^c(1-c(\pi))\left\{\mu_0^c\left[\omega-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega-2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -\tau_{s_2}^cc^\prime(\pi)\left\{\mu_0^c\left[\omega-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega-2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -4\gamma v\tau_{s_2}^c(1-c(\pi))\Bigg\{\left[(2\mu_0^c-1)\omega-2\gamma v\left(\frac{\mu_0^cx_2-(1-\mu_0^c)(1-x_1)}{1-x_1+x_2}\right)\right]\left[\frac{x_2}{(1-x_1+x_2)^2}\right]\Bigg\}=0
+    \end{split} \\
+    \label{focx22}
+    \begin{split}
+        c^\prime(\pi)\left[(\omega-\gamma v)^2\right]+ \\
+        -(1-\mu_0^c)(1-c(\pi))\left\{\mu_0^c\left[\omega-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega-2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        -\tau_{s_1}^cc^\prime(\pi)\left\{\mu_0^c\left[\omega-2\gamma v\left(\frac{1-x_2}{x_1+1-x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega-2\gamma v\left(\frac{x_1}{x_1+1-x_2}\right)\right]^2\right\}+ \\
+        +4\gamma v\tau_{s_1}^c(1-c(\pi))\Bigg\{\left[(2\mu_0^c-1)\omega+2\gamma v\left(\frac{(1-\mu_0^c)x_1-\mu_0^c(1-x_2)}{x_1+1-x_2}\right)\right]\left[\frac{x_1}{(x_1+1-x_2)^2}\right]\Bigg\}+\\
+        +(1-\mu_0^c)(1-c(\pi))\left\{\mu_0^c\left[\omega-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega-2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -\tau_{s_2}^cc^\prime(\pi)\left\{\mu_0^c\left[\omega-2\gamma v\left(\frac{x_2}{1-x_1+x_2}\right)\right]^2+(1-\mu_0^c)\left[\omega-2\gamma v\left(\frac{1-x_1}{1-x_1+x_2}\right)\right]^2\right\}+\\
+        -4\gamma v\tau_{s_2}^c(1-c(\pi))\Bigg\{\left[(2\mu_0^c-1)\omega-2\gamma v\left(\frac{\mu_0^cx_2-(1-\mu_0^c)(1-x_1)}{1-x_1+x_2}\right)\right]\left[\frac{1-x_1}{(1-x_1+x_2)^2}\right]\Bigg\}=0
+    \end{split}
+\end{eqnarray}
+\end{small}
+% \begin{proposition}
+%     When unemployment shocks are symmetric and beliefs are asymmetric, the best information policy for the CB is to be uninformative i.e., $x_1+x_2=1$.
+% \end{proposition}
+% \begin{proof}
+%     Label each separate additive term in \eqref{focx12} from the top with (\RomanNumeralCaps{1}), the second top with (\RomanNumeralCaps{2}), and to the bottom with (\RomanNumeralCaps{7}). First, $\tau_{s_1}^c = x_1$ and $\tau_{s_2}^c = 1-x_1$ if $x_1+x_2=1$ holds true. (\RomanNumeralCaps{4}) and  (\RomanNumeralCaps{7}) can be thus rewritten as:
+%     \begin{align}
+%         \small
+%         \gamma\nu(1-c(\pi))(2\mu_0^c-1)(\omega-\gamma\nu) \\
+%         -\gamma\nu(1-c(\pi))(2\mu_0^c-1)(\omega-\gamma\nu)
+%     \end{align}
+%     Hence, (\RomanNumeralCaps{4}) and  (\RomanNumeralCaps{7}) sum up to zero. All fractions in (\RomanNumeralCaps{2}) and (\RomanNumeralCaps{5}) become one half after substituting $x_1+x_2=1$ so all terms in (\RomanNumeralCaps{2}) and (\RomanNumeralCaps{5}) get canceled out so their sum is zero. The remaining task is to show that  (\RomanNumeralCaps{1}), (\RomanNumeralCaps{3}), and (\RomanNumeralCaps{6}) amount to zero. (\RomanNumeralCaps{3}) and (\RomanNumeralCaps{6}) can be rewritten respectively as:
+%     \begin{align}
+%         \small 
+%         -x_1c^\prime(\pi)(\omega-\gamma v)^2 \\
+%         -(1-x_1)c^\prime(\pi)(\omega-\gamma v)^2
+%     \end{align}
+%     It follows that $\mbox{(\RomanNumeralCaps{1})}+\mbox{(\RomanNumeralCaps{3})}+\mbox{(\RomanNumeralCaps{6})}=0$. The above also holds for \eqref{focx22}.
+% \end{proof}
+\subsubsection{Simulated Results with Symmetric Shocks}
+We vary the prior of the central bank $\mu_0^c$ from 0.01 to 0.99 with a step size of 0.01 while holding $\mu_0=\frac{1}{2}$ constant when symmetric shocks $\omega$ are 0.1, 1, 10, and 100. The figures below demonstrate the results of optimal signals $x$ under each case.
+\begin{figure}[htp!]
+\caption{$\omega=0.1$}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_hetero_μ_c_ω_w_0.1_ω_s_-0.1.pdf}
+\includegraphics[width=0.9\textwidth]{figures/posterior_hetero_μ_c_ω_w_0.1_ω_s_-0.1.pdf}
+\includegraphics[width=0.9\textwidth]{figures/share_hetero_μ_c_ω_w_0.1_ω_s_-0.1.pdf}
+\end{figure}
+\begin{figure}[htp!]
+\caption{$\omega=1$}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_hetero_μ_c_ω_w_1_ω_s_-1.pdf}
+\includegraphics[width=0.9\textwidth]{figures/posterior_hetero_μ_c_ω_w_1_ω_s_-1.pdf}
+\includegraphics[width=0.9\textwidth]{figures/share_hetero_μ_c_ω_w_1_ω_s_-1.pdf}
+\end{figure}
+\begin{figure}[htp!]
+\caption{$\omega=10$}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_hetero_μ_c_ω_w_10_ω_s_-10.pdf}
+\includegraphics[width=0.9\textwidth]{figures/posterior_hetero_μ_c_ω_w_10_ω_s_-10.pdf}
+\includegraphics[width=0.9\textwidth]{figures/share_hetero_μ_c_ω_w_10_ω_s_-10.pdf}
+\end{figure}
+\begin{figure}[htp!]
+\caption{$\omega=100$}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_hetero_μ_c_ω_w_100_ω_s_-100.pdf}
+\includegraphics[width=0.9\textwidth]{figures/posterior_hetero_μ_c_ω_w_100_ω_s_-100.pdf}
+\includegraphics[width=0.9\textwidth]{figures/share_hetero_μ_c_ω_w_100_ω_s_-100.pdf}
+\end{figure}
+
+\subsubsection{Simulated Results with Asymmetric Shocks}
+We redo the previous exercise but with $(\omega_w,\omega_s)$ are (1, -10), (1, -100), (10, -1), and (100, -1). The figures below demonstrate the results of optimal signals $x$ under each case.
+\begin{figure}[htp!]
+\caption{$(\omega_w,\omega_s)=(1, -10)$}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_hetero_μ_c_ω_w_1_ω_s_-10.pdf}
+\includegraphics[width=0.9\textwidth]{figures/posterior_hetero_μ_c_ω_w_1_ω_s_-10.pdf}
+\includegraphics[width=0.9\textwidth]{figures/share_hetero_μ_c_ω_w_1_ω_s_-10.pdf}
+\end{figure}
+\begin{figure}[htp!]
+\caption{$(\omega_w,\omega_s)=(1, -100)$}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_hetero_μ_c_ω_w_1_ω_s_-100.pdf}
+\includegraphics[width=0.9\textwidth]{figures/posterior_hetero_μ_c_ω_w_1_ω_s_-100.pdf}
+\includegraphics[width=0.9\textwidth]{figures/share_hetero_μ_c_ω_w_1_ω_s_-100.pdf}
+\end{figure}
+\begin{figure}[htp!]
+\caption{$(\omega_w,\omega_s)=(10, -1)$}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_hetero_μ_c_ω_w_10_ω_s_-1.pdf}
+\includegraphics[width=0.9\textwidth]{figures/posterior_hetero_μ_c_ω_w_10_ω_s_-1.pdf}
+\includegraphics[width=0.9\textwidth]{figures/share_hetero_μ_c_ω_w_10_ω_s_-1.pdf}
+\end{figure}
+\begin{figure}[htp!]
+\caption{$(\omega_w,\omega_s)=(100, -1)$}
+\centering
+\includegraphics[width=0.9\textwidth]{figures/fig_hetero_μ_c_ω_w_100_ω_s_-1.pdf}
+\includegraphics[width=0.9\textwidth]{figures/posterior_hetero_μ_c_ω_w_100_ω_s_-1.pdf}
+\includegraphics[width=0.9\textwidth]{figures/share_hetero_μ_c_ω_w_100_ω_s_-1.pdf}
+\end{figure}
+
+\section{Numerical Exercises}
+\begin{itemize}
+    \item $\gamma$ denotes the sensitivity of unemployment to inflation. Stock and Watson (2020, JMCB) find that $1/\gamma$ decreases from -0.48 (1960-1983), -0.26 (1984-1999), all the way down to -0.03 (2000-2019). This confirms the flattened Phillips curve. This implies $\gamma$ drops from around -2 to -33. In the benchmark, we set $\gamma$ to -10. For example, a one percentage point increase in the annual average unemployment gap was associated with a -0.48 (standard error of 0.10) percentage point change in the year-over-year change in the rate of core PCE inflation.
+    \item We set the inflation target $\pi^T$ to 2\%. 
+    \item $\nu$ is the symmetric monetary policy action to inflation around the target, dependent on the realized state. We set it to 1\%.
+    \item $\omega$ represents the state of the economy in terms of the unemployment rate. There are strong $\omega_s$ and week $\omega_w$.
+\end{itemize}
+
+The goal is to solve the nonlinearly constrained minimization problem characterized by Equation \eqref{opt_heterogeneous_priors} subject to $0 \leq x_1 \leq 1$, $0 \leq x_2 \leq 1$, and $x_1+x_2 \geq 1$.
+
+\section{Some Random Thoughts}
+
+It has been documented greater inattention when inflation is low. Can our model rationalize this fact?
+
+\newpage
+\bibliographystyle{ecta}
+\bibliography{references}
+
+\end{document}

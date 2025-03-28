@@ -1,0 +1,249 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{mathpazo}
+\usepackage{bbm}
+\usepackage{setspace}
+\usepackage[longnamesfirst]{natbib}
+\usepackage[colorlinks=true,citecolor=blue]{hyperref}
+\allowdisplaybreaks
+
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+\newtheorem{example}{Example}
+
+\title{Central Bank Communication with (Costly) Bayesian Persuasion}
+\author{Federico Innocenti \and Tsung-Hsien Li}
+\date{\today}
+
+\begin{document}
+
+\setstretch{1.25}
+\setlength{\parskip}{2mm}
+
+\maketitle
+
+\section{Introduction}
+
+Motivate the project with a short paragraph on why CB should communicate and many CBs do so. Yet, market participants are rationally inattentive and this has not been studied completely in the literature.
+
+Research question: What is the optimal central bank communication or disclosure policy with rationally inattentive market participants?
+
+Related literature: BP (esp., the one w/ costly information acquisition), MP (or communication), BP \& MP
+
+\cite{Ko2022} studies the optimal central bank communication policy about future uncertainty of economic conditions to influence the inflation expectation of private sectors, namely forward guidance. In her economy, the bank receives a private signal of the evolution of underlying states and she characterizes under what conditions the bank decides whether and to what extent it reveals the private signal. In short, the equilibrium decisions depend on the types of monetary policy (unemployment or inflation targeting) and economic prospect (weak or strong). 
+
+\textbf{[I think this paper is close to what we have in mind (at least for me), particularly the 2-2-2 standard structure of Bayesian persuasion. Yet, there is no information cost in her paper (good for us). If I understand her paper correctly, the bank speaks truthfully sometimes. In particular, the bank might prefer a mixed message when the bad state is more likely to happen, i.e., telling private sectors that both states could happen so as to guide their expectation toward the one in the good state.]}
+
+\cite{Herbert2021} extends \cite{KG2011} by introducing heterogeneous priors of receivers and applies this framework to study how the central bank communicates with firms about the aggregate conditions to influence their investment decisions with the presence of coordination externality. She proposes a tractable way of modeling dynamic persuasion where receivers update their belief \textit{ex-post} after verifying if the bank has been telling the truth to form the next-period priors. In particular, receivers calculate how many times the bank spoke truthfully.
+
+\textbf{[I think this paper is also quite relevant and points out the bank prefers moderating their messages due to belief heterogeneity among receivers.]}
+
+\section{Model}
+
+There are payoff-relevant states of the world and actions. We define with $\Omega$ and $A$ the set of states and actions, respectively. There are two types of agents: a unit mass of receivers (households, hereafter HHs) and a sender (the central bank, hereafter CB). HHs and CB share the same prior belief $\mu_0 \in \Delta(\Omega)$.\footnote{$\Delta(X)$ denotes the set of all probability distributions on $X$.} The CB provides information $\pi$, which consists of the set of messages $S$ and a family of distributions $\{\pi(\cdot|\omega)\}_{\omega\in\Omega}$ over $S$. In other words, $\pi: \Omega \to \Delta(S)$. Each message $s$ leads to a posterior belief $\mu_s$. As a result, $\pi$ induces a distribution of posteriors $\{\mu_s\}_{s \in S}$, denoted by $\tau \in \Delta(\Delta(\Omega))$. The martingale property or Bayes plausibility condition hold: $\mathbb{E}_{\tau}(\mu_s)=\mu_0$. All other variables without explicitly mentioned are defined \`{a} la the Bayesian persuasion literature.
+
+Each receiver $i$ has an attention budget $c_i$, which is distributed according to $F(\cdot)$. Receiver $i$ devotes attention to the information $\pi$ provided by the CB if and only if $c(\pi)<c_i$, where $c(\pi)$ is the cost of processing information. In particular,
+\begin{align}
+    c(\pi; \chi, \mu_0) = \chi\left[H(\mu_0)-\sum_{s \in S}\tau(\mu_s) H(\mu_s)\right],
+\end{align}
+where $H(\cdot)$ is the Shannon entropy defined as:
+\begin{align}
+    H(\mu) & = -\sum_{\omega\in\Omega}\mu(\omega)\ln(\mu(\omega)),
+    % & = -[\mu(\omega_1)\ln(\mu(\omega_1))+\mu(\omega_2)\ln(\mu(\omega_2))], \\
+    % & = -[\mu(\omega_1)\ln(\mu(\omega_1))+(1-\mu(\omega_1))\ln(1-\mu(\omega_1))];
+\end{align}
+and $\tau$ is defined as:
+\begin{align}
+    \tau(\mu_s) = \sum_{\omega'\in\Omega}\pi(s|\omega')\mu_0(\omega'),
+\end{align}
+and $\mu_s$ is defined as:
+\begin{align}
+    % \mu_s(\omega) = \frac{\pi(s|\omega)\mu_0(\omega)}{\pi(s|\omega_1)\mu_0(\omega_1)+\pi(s|\omega_2)\mu_0(\omega_2)},
+    \mu_s(\omega) = \frac{\pi(s|\omega)\mu_0(\omega)}{\sum_{\omega'\in\Omega}\pi(s|\omega')\mu_0(\omega')},
+\end{align}
+for any message $s\in S$, and $\chi>0$ is a parameter. It follows that the mass of receivers paying attention to CB is $1-F(c(\pi))$. The posterior beliefs of receivers not paying attention remain as the common prior belief $\mu_0$. When $\pi$ is uninformative (i.e., $\mu_s = \mu_0$ for any $s\in S$), $c(\pi)=0$. Instead, when $\pi$ is perfectly informative (i.e., for any $s \in S$ there exists $\omega^* \in \Omega$ such that $\mu_s(\omega^*)=1$), $H(\mu_s)=0$ for any $s\in S$ and hence $c(\pi)=\chi H(\mu_0)$.
+
+\textbf{[If receivers believe one state will come with probability one (extreme priors), then $H(\mu_0)=0$ and $c(\pi)=-\chi\sum_{s \in S}\tau(\mu_s)H(\mu_s)$. Under this case, any posteriors deviating from the extreme priors result in ``positive'' information gains. But I think such deviations are not Bayesian plausible so these situations never occur?]}
+
+Each receiver has a utility function $u(a,\omega)$. As her optimal action depends on her posterior belief $\sigma(\mu)$, her utility can be written as $\hat{u}(\mu)=\mathbb{E}_\mu u(\sigma(\mu),\omega)$. We assume that CB is benevolent and its objective is to maximize the sum of receivers' utility, i.e., $U = \int_i u_i(a,\omega)$. Thanks to the aforementioned threshold rule for information acquisition, CB's utility function can be expressed as:
+\begin{align}
+   U(\pi) & = \int_{\{i:\, c(\pi) \geq c_i\}} \hat{u}(\mu_0) + \int_{\{i:\, c(\pi) < c_i\}} \mathbb{E}_\tau(\hat{u}(\mu_s)), \\
+   & = \hat{u}(\mu_0)F(c(\pi)) + \mathbb{E}_\tau(\hat{u}(\mu_s))(1-F(c(\pi))).
+\end{align}
+
+The timing is as follows:
+\begin{itemize}
+    \item CB chooses information $\pi$.
+    \item Each receiver devoting attention receives a message $s$. % a realization from $\pi$.
+    \item Each receiver takes an optimal action $\sigma(\mu)$.
+\end{itemize}
+
+\begin{example}
+    There are two payoff-relevant states of the world and two actions. In particular, $\Omega=\{\omega_1,\omega_2\}$ and $A=\{a_1,a_2\}$. The utility of any receiver is $u(a,\omega_k)=\mathbbm{1}\{a=a_{k}\}$. In the last stage, each receiver thus takes an optimal action $\sigma(\mu)$ defined as follows: 
+    \begin{align}
+        \sigma(\mu)=\left\{\begin{array}{ll}
+        a_1   &  \mbox{if } \mu(\omega_1)\geq \frac{1}{2}\\
+        a_2   &  \mbox{otherwise}
+        \end{array}\right.,
+    \end{align}
+    or $\sigma(\mu) = a_{\arg\max_i\mu(\omega_i)}$. CB's information $\pi$ consists of two messages $S=\{s_1,s_2\}$.
+\end{example}
+
+% The belief $\mu$ depends on whether a receiver devotes attention to $\pi$. In particular,
+% $$\mu=\left\{\begin{array}{ll}
+%   \mu(s)   &  \mbox{if } c_i\geq c(\pi)\\
+%   \mu_0   &  \mbox{otherwise}
+% \end{array}\right..$$
+
+In the first stage, CB chooses $\pi$ to maximize the following function:
+\begin{align}
+    U(\pi)=\hat{u}(\mu_0)F(c(\pi)) + \mathbb{E}_\tau(\hat{u}(\mu_s))(1-F(c(\pi))),
+\end{align}
+where $\hat{u}(\mu_0)=\mu_0^m\equiv\max_{\omega}\mu_0(\omega)$ is the prior of the most plausible state and the expected payoff from receivers devoting attention $\mathbb{E}_\tau(\hat{u}(\mu_s))$ can be spelled out as:
+\begin{align}
+    \mathbb{E}_\tau(\hat{u}(\mu_s)) = \tau(\mu_{s_1})\mu^m_{s_1} + \tau(\mu_{s_2})\mu^m_{s_2}.
+\end{align}
+
+The optimal $\pi$ must be such that the two messages $s_1,s_2$ are recommendations to take actions $a_1,a_2$, respectively. Assume by contradiction that $s_1,s_2$ imply the same action. This increases the cost of $\pi$ (decreases attention) without $\lambda(\pi)$ respect to the benchmark of an uninformative $\pi$. Thus, $\pi$ cannot be optimal. \textbf{[Could you please write down a more detailed exposition?]}
+
+It follows that for the optimal $\pi$ it must hold $\mu_{s_1}(\omega_1)\geq\frac{1}{2}$ and $\mu_{s_2}(\omega_1)\leq\frac{1}{2}$. This is equivalent to imposing:
+\begin{align}
+    \pi(s_1|\omega_1)-\phi\pi(s_1|\omega_2)\geq \max\{0,1-\phi\},
+\end{align}
+where $\phi=\frac{\mu_0(\omega_2)}{\mu_0(\omega_1)}$. It follows that:
+\begin{align}
+    \hat{u}(\mu_0) & = \frac{1}{2}, \\
+    \mathbb{E}_\tau(\hat{u}(\mu_s)) & = \tau(\mu_{s_1})\mu_{s_1}(\omega_1) + \tau(\mu_{s_2})\mu_{s_2}(\omega_2).
+\end{align}
+
+\begin{assumption}
+    $F(\chi H(\mu_0))=1$ and $\mu_0(\omega_1)=\frac{1}{2}$ (or equivalently $\phi=1$).
+\end{assumption}
+
+Let $x_1=\pi(s_1|\omega_1)$ and $x_2=\pi(s_2|\omega_2)$ and note that it must hold that $x_1+x_2>1$. It follows that:
+\begin{align}
+    \tau(\mu_{s_1}) & = \frac{1}{2}(x_1 + 1-x_2), \\
+    \mu_{s_1}(\omega_1) & = \frac{x_1}{x_1 + 1-x_2}, \\
+    \tau(\mu_{s_2}) & = \frac{1}{2}(1-x_1 + x_2), \\
+    \mu_{s_2}(\omega_2) & = \frac{x_2}{1-x_1 + x_2}, \\
+     \mathbb{E}_\tau(\hat{u}(\mu_s)) & = \frac{1}{2}(x_1+x_2), \\
+     H(\mu_0) & = \ln(2), \\
+     H(\mu_{s_1}) & = -\left[\frac{x_1\ln(x_1)+(1-x_2)\ln(1-x_2)}{x_1+1-x_2}-\ln(x_1+1-x_2)\right], \\
+     H(\mu_{s_2}) & = -\left[\frac{(1-x_1)\ln(1-x_1)+x_2\ln(x_2)}{1-x_1+x_2}-\ln(1-x_1+x_2)\right], \\
+     c(\pi) & = \chi\left[\ln(2)-\tau(\mu_{s_1})H(\mu_{s_1})-\tau(\mu_{s_2})H(\mu_{s_2})\right].
+\end{align}
+
+The CB's maximization problem is thus given by:
+\begin{align}
+    \max_{x_1,x_2} \left[\frac{1}{2}F(c(\pi)) + \frac{1}{2}(x_1+x_2)(1-F(c(\pi)))\right].
+\end{align}
+The corresponding FOCs for $x_1,x_2$ are:
+\begin{align}
+    \frac{1}{2}\left[1-F(c(\pi))-(x_1+x_2-1)f(c(\pi))c^\prime(\pi)\right]=0,
+\end{align}
+where the marginal cost of information $c^\prime(\pi)$ has the following expression:
+\begin{align}
+    c^\prime(\pi) & =\frac{\partial c(\pi)}{\partial x_k} \\
+    & = -\chi \sum_{j=1,2} \left[\frac{\partial \tau_{\mu_{s_j}}}{\partial x_k}H(\mu_{s_j}) + \tau_{\mu_{s_j}}\frac{\partial H(\mu_{s_j})}{\partial x_k}\right].
+    % & = -\chi\left[\pi(s_1)H^\prime(\mu(s_1))+\pi(s_2)H^\prime(\mu(s_2))+\frac{1}{2}(H(\mu(s_1)-H(\mu(s_2))\right]
+\end{align}
+Observe that:
+\begin{align}
+    \frac{\partial \tau_{\mu_{s_j}}}{\partial x_k} & = \left\{\begin{array}{ll}
+        \frac{1}{2} & \mbox{if } j = k\\
+        -\frac{1}{2} & \mbox{otherwise}
+        \end{array}\right., \\
+    \frac{\partial H(\mu_{s_j})}{\partial x_k} & = \left\{\begin{array}{ll}
+        -\frac{(1-x_l)[\ln(x_j)-\ln(1-x_l)]}{(x_j+1-x_l)^2} & \mbox{if } j = k\\
+        -\frac{x_j[\ln(x_j)-\ln(1-x_k)]}{(x_j+1-x_k)^2} & \mbox{otherwise}
+        \end{array}\right.,
+\end{align}
+where 
+\begin{align}
+    H^\prime(\mu(s_1)) & =\frac{\partial H(\mu(s_1))}{\partial x_1}=-\left[\frac{(1-x_2)(\ln(x_1)-\ln(1-x_2))}{(x_1+1-x_2)^2}\right]<0, \\
+    H^\prime(\mu(s_2)) & =\frac{\partial H(\mu(s_2))}{\partial x_1}=-\left[\frac{x_2(\ln(x_2)-\ln(1-x_1))}{(x_2+1-x_1)^2}\right]<0.
+\end{align}
+Symmetry $x_1=x_2=x$ implies:
+\begin{align}
+    x=\frac{1}{2}\left[1+\frac{1}{h(c(\pi))c^\prime(\pi)}\right],
+\end{align}
+where $h(c(\pi))=\frac{f(c(\pi))}{1-F(c(\pi))}$ denotes the hazard function. Note that $x>\frac{1}{2}$ if and only if $c^\prime(\pi)>0$. 
+Because of symmetry, it holds that:
+\begin{align*}
+    c^\prime(\pi) & = \frac{\chi}{2}\ln\left(\frac{x}{1-x}\right), \\
+    H(\mu(s_1)) & = H(\mu(s_2))=-[x\ln(x)+(1-x)\ln(1-x)], \\
+    c(\pi) & = \chi[\ln(2)+x\ln(x)+(1-x)\ln(1-x)].
+\end{align*}
+\begin{assumption}
+    Attention is uniformly distributed: $F(\cdot)=U[0,1]$. Therefore, it must hold $\chi=\frac{1}{\ln(2)}$. 
+\end{assumption}
+From the previous assumption it holds that $h(c(\pi))=\frac{1}{1-c(\pi)}$. Therefore, it follows that:
+\begin{align}
+    x=\frac{1}{2}+\frac{1-c(\pi)}{2c^\prime(\pi)}=\frac{1}{2}-\frac{x\ln(x)+(1-x)\ln(1-x)}{\ln\left(\frac{x}{1-x}\right)}.
+\end{align}
+Therefore, the optimal $x$ must solve:
+\begin{align}
+    \frac{4x-3}{4x-1}=\frac{\ln(x)}{\ln(1-x)}.
+\end{align}
+and the solution is $x\approx 0.8173$. In other words, the optimal $\pi$ by CB has the following design:
+\begin{align}
+    \pi(s_1|\omega_1) & = \pi(s_2|\omega_2)\approx 0.8173, \\
+    \pi(s_1|\omega_2) & = \pi(s_2|\omega_1)\approx 0.1827.
+\end{align}
+The CB provides recommendations that are pretty often correct, but not perfect. The probability of a mistake is close to $20\%$. This is done to keep the level of complexity of the recommendations to an acceptable level for an optimal audience. Such an audience is not small. Indeed, the cost of the optimal $\pi$ is $c(\pi)=0.3141$. Therefore, the audience is $1-c(\pi)=0.6859$. The aggregate utility with CB communication is $0.5 \times 0.3141 + 0.8173 \times  0.6859 = 0.7176$, which is higher than 0.5 without disclosure.
+
+\begin{example}
+    The cost of acquiring information is NOT a sunk cost. Thus, the expected utility function of a receiver devoting attention is $\mathbb{E}_{\tau}(\hat{u}(\mu_s))-c(\pi)$. Otherwise, the same as in Example 1.
+\end{example}
+
+The CB's maximization problem is thus given by:
+\begin{align}
+    \max_{x_1,x_2} \left[\frac{1}{2}F(c(\pi)) + \left(\frac{1}{2}(x_1+x_2)-c(\pi)\right)(1-F(c(\pi)))\right].
+\end{align}
+The corresponding FOCs for $x_1,x_2$ are:
+\begin{align}
+    (1-2c'(\pi))(1-F(c(\pi)))=(x_1+x_2-1-2c(\pi))f(c(\pi))c^\prime(\pi).
+\end{align}
+It follows that:
+\begin{align}
+    (1-2c'(\pi))(1-c(\pi)) & = (x_1+x_2-1-2c(\pi))c^\prime(\pi).
+\end{align}
+Symmetry implies:
+\begin{align}
+    (1-2c'(\pi))(1-c(\pi)) & = (2x-1-2c(\pi))c^\prime(\pi), \\
+    c(\pi) & = \chi[\ln(2)+x\ln(x)+(1-x)\ln(1-x)], \\
+    c^\prime(\pi) & = \frac{\chi}{2}[\ln(x)-\ln(1-x)].
+\end{align}
+Therefore, the optimal $\pi$ has the following design:
+\begin{align}
+    \pi(s_1|\omega_1) = \pi(s_2|\omega_2) & \approx 0.6357, \\
+    \pi(s_1|\omega_2) = \pi(s_2|\omega_1) & \approx 0.3463, \\
+    c(\pi) & = 0.0693.
+\end{align}
+When the cost of information acquisition is internalized, the CB sends fuzzier messages to lower the information costs, thus attracting more attention. The share of receivers paying attention soars to 0.9307, way higher than 0.6859. It may seem puzzling that the share increased by far. However, when the cost is embedded in utility, decreasing the information cost is equivalent to increasing the utility of receivers. As a result of vague messages from CB, the share of attentive receivers rises. The aggregate utility with CB communication is $0.5 \times 0.0693 + (0.6357-0.0693) \times  0.9307 = 0.5618$, which is higher than 0.5 without disclosure. 
+
+\subsection{Tentative Macro Variant}
+
+CB can communicate with HHs to conduct either demand management or forward guidance. We focus on the former.\footnote{The former is to affect the contemporaneous aggregate demand when receivers do not consider the impact of their individual decisions on the market return (i.e., coordination externality). The latter is to influence the economic expectation of receivers, e.g., inflation, so that they end up choosing good actions today to avoid a self-fulling crisis tomorrow.} Assume now that the fundamental state $\omega \in \{0,1\}$ where $\omega=0$ ($\omega=1$) represents the bad (good) state. HHs take a binary consumption decision $a \in \{0,1\}$. HHs are subject to the cost of processing CB messages $c(\pi)$. The state affects the HH utility in the following way:
+\begin{align}
+    u(a_i,\omega;\pi) & = g\left(\omega,\int_0^1 a_j \, \mbox{d}j \right) a_i - c_i(\pi), \\
+    c_i(\pi) & = \left\{\begin{array}{ll}
+        c(\pi)   &  \mbox{if } c_i > c(\pi) \\
+        0        &  \mbox{otherwise}
+        \end{array}\right..
+\end{align}
+This functional form $g(\cdot)$ implies that the return on consumption depends on the fundamental state $\omega$ and the degree of market participation $\int_0^1 a_j \, \mbox{d}j$. In other words, HHs face a coordination problem. CB's objective function is given by:
+\begin{align}
+    U(\pi) = \int_i u(a_i,\omega; \pi) \, \mbox{d}i.
+\end{align}
+
+\textbf{[Need to come up with a $g$ such that $a_i$ is the dominant action under $\omega_i$ at the individual level but not at the aggregate level. Any idea?]}
+
+\newpage
+\bibliographystyle{ecta}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,401 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+	
+	%\usetheme{CambridgeUS}
+	\usetheme{Madrid}
+	%\usetheme{Pittsburgh}
+	%\usetheme{Singapore}
+}
+
+\usepackage{booktabs} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{bbding}
+\usepackage{bbm}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{amsthm}
+\usepackage{appendixnumberbeamer}
+\usepackage{natbib}
+\usepackage{multirow,array}
+\usepackage{mathtools}
+\usetikzlibrary{calc}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\setbeamertemplate{theorems}[numbered]
+\newtheorem{assumption}{Assumption}
+\newtheorem{proposition}{Proposition}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{}
+
+\begin{document}
+	
+\title[]{"Whatever it takes": a good communication strategy?}
+	
+\author{Federico Innocenti\thanks{Department of Economics, University of Verona.} \and Tsung-Hsien Li\thanks{Institute of Economics, Academia Sinica}}
+\date{XVIII GRASS Workshop \\
+September 10, 2024} 
+
+\begin{frame}
+	\titlepage 
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+\frametitle{Motivation}
+Central banks strategically provide information to economic agents to influence their behavior. 
+\begin{itemize}
+    \item In an inflation targeting regime the way market participants form their expected inflation determines the effectiveness of monetary policy.
+    \item Communication helps central banks with expectation management \citep{Casiraghi2022}.
+\end{itemize}
+\vskip10pt
+A central bank can provide information to economic agents in various forms, from technical reports to policy announcements.
+\begin{enumerate}
+    \item Technical reports are more precise and, thus, in principle more suitable to steer behavior in favor of its policy objective.
+    \item However, it is also costly for market participants to process information, and the cost increases in its complexity \citep{Sims2003}.
+    \item Technical reports can be less effective than simple speeches because the former are too complex.
+\end{enumerate} 
+\framebreak
+The most famous example of simple but effective communication is perhaps a quote from the former ECB President Mario Draghi in 2012 during the Eurozone crisis:
+\vskip5pt
+\begin{quote}
+Within our mandate, the ECB is ready to do \textbf{whatever it takes} to preserve the euro. And believe me, it will be enough.
+\end{quote}
+\vskip5pt
+Why was this quote so powerful?
+\begin{enumerate}
+    \item It is vague. It does not provide information about how the crisis was expected to evolve or the instruments to solve it. 
+    \item Yet it was enough to reassure the financial markets.
+    \item \textbf{Key insight}: optimal communication is persuasive but simple.
+\end{enumerate}
+\framebreak
+Central banks face a trade-off between policy capacity and ``popularity'', i.e., the ability to gather attention. 
+\begin{itemize}
+    \item The central bank can use information to alter beliefs and, thus, behavior.
+    \item However, this attempt is ineffective if economic agents do not have the attention o the ability to understand the content of information.
+\end{itemize}
+\vskip10pt
+\textbf{Research questions:}
+\begin{enumerate}
+    \item What is the best communication strategy for a central bank?
+    \item How does it depend on the policy objective, macroeconomic conditions and agents' beliefs?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}
+\frametitle{This paper}
+We study a Bayesian persuasion model with rationally inattentive receivers (e.g., households, investors) to answer these questions. 
+\vskip10pt 
+Preliminary work!
+\vskip10pt
+We find that the central bank provides some information only if their beliefs are different from those of households. 
+\begin{enumerate}
+    \item The central bank can intervene to correct excessive optimism or pessimism.
+    \item It intervenes when the difference in beliefs is significantly large.
+    \item The response is asymmetric when economic shocks are asymmetric.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Relevant Literature}
+\textbf{Bayesian Persuasion}:
+\begin{itemize}
+    \item Pioneered by \cite{aumann1995repeated} and \cite{KG2011}. 
+    \item Receivers with limited attention: \cite{Bloedel2020,Lipnowski2020,lipnowski2022,Wei2021,Matyskova2021,innocenti2022can}.
+\end{itemize}
+\vskip10pt
+\textbf{Central Bank Communication}:
+\begin{itemize}
+    \item A few papers use Bayesian persuasion to study the optimal central bank communication. The closest is \cite{Ko2022}.
+    \item \cite{Ko2022} assumes that the central bank produces information conditional on a private forecast of the economy. Otherwise, the central bank would always perfectly reveal the state. 
+    \item We do not require such assumption. The central bank can fully reveal the state but finds it optimal to provide imperfect information because households do not process complex information.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+\frametitle{Model}
+Partial equilibrium forward guidance model wherein we embody a Sender-Receiver game. 
+\vskip10pt
+We assume that the sender has commitment power: Bayesian persuasion. 
+\vskip10pt
+Two states of the economy: weak (i.e., $\omega_1$) or strong (i.e., $\omega_2$). $\Omega \coloneqq \{\omega_1, \omega_2\}$ is the set of states.
+\vskip10pt
+Two types of agents: a unit mass of households (hereafter HHs) and the central bank (hereafter CB). 
+\vskip10pt 
+\framebreak
+CB controls inflation:
+\vskip10pt
+\begin{itemize}
+    \item CB sets inflation $x$ as a function of the state of the economy: 
+    \begin{equation*}
+        x(\omega,v)\coloneqq\left\{
+        \begin{array}{cc}
+        x^T+v_1&  \mbox{If } \omega=\omega_1\\
+        x^T-v_2   &  \mbox{If } \omega=\omega_2
+        \end{array}
+        \right.
+    \end{equation*}
+    CB may allow higher inflation than the target when the economy is weak (to help recovery) and lower when the economy is strong (to counter future inflation).
+    \vskip10pt
+    \item CB chooses the flexibility $v\coloneqq(v_1,v_2)$ to allow - conditional on the state of the economy $\omega\in \Omega$ - relative to its target $x^T$ for inflation.
+\end{itemize} We define CB's objective function $u$ as follows:
+\begin{equation}
+    \label{uc}
+    u \coloneqq -\left[\omega+\gamma(x^e-x)\right]^2-\alpha(x-x^T)^2
+\end{equation}
+where $\gamma$ is the effect of inflation surprise on unemployment, $\alpha$ is the relative importance of the inflation gap, $x^e$ is the expected inflation.
+\vskip10pt
+HHs form $x^e$ using the information provided by CB:
+\begin{enumerate}
+    \item $x^e(\mu)$ is a function of HHs beliefs $\mu$.
+    \item $\mu$ can be manipulated by CB in the Sender-Receiver game: CB is the sender, whereas HHs are the receivers.
+\end{enumerate}
+\vskip10pt
+\framebreak
+Sender-Receiver game: 
+\begin{enumerate}
+    \item CB strategically provides information $\pi$ to HHs to influence their behavior.
+    \item HHs are either naive or sophisticated. Naive HHs have limited attention and decides whether to process the CB's information. The share of naive HHs is $\delta$.
+\end{enumerate}
+HHs share the same prior belief $\mu_0 \in \Delta(\Omega)$, which may differ from CB's prior belief $\mu_0^c \in \Delta(\Omega)$.\\
+\framebreak
+The CB commits to an information structure $\pi: \Omega \to \Delta(S)$, consisting of:
+\begin{enumerate}
+    \item a set of messages $S=\{s_1,s_2\}$.
+    \item a family of distributions $\{\pi(\cdot|\omega)\}_{\omega\in\Omega}$ over $S$.
+\end{enumerate}
+Each message $s$ leads to a posterior belief $\mu_s$:
+\begin{align*}
+    \mu_s(\omega) = \frac{\pi(s|\omega)\mu_0(\omega)}{\pi(s|\omega_1)\mu_0(\omega_1)+\pi(s|\omega_2)\mu_0(\omega_2)},
+\end{align*}
+As a result, $\pi$ induces a distribution of posteriors denoted by $\tau \in \Delta(\Delta(\Omega))$:
+\begin{align*}
+    \tau(\mu_s) = \pi(s|\omega_1)\mu_0(\omega_1)+\pi(s|\omega_2)\mu_0(\omega_2),
+\end{align*}
+The martingale property or Bayes plausibility condition hold: $\mathbb{E}_{\tau}(\mu_s)=\mu_0$.
+\vskip5pt 
+\framebreak
+Each naive HH $i$ has an attention budget $c_i$, distributed according to $F(\cdot)$. 
+\vskip5pt HH $i$ devotes attention to the information $\pi$ provided by the CB if and only if $c(\pi)<c_i$, where $c(\pi)$ is the cost of processing information. In particular,
+\begin{align*}
+    c(\pi; \chi, \mu_0) = \chi\left[H(\mu_0)-\sum_{s \in S}\tau(\mu_s) H(\mu_s)\right],
+\end{align*}
+where $H(\cdot)$ is the Shannon entropy defined as:
+\begin{align*}
+    H(\mu) & = -\sum_{\omega\in\Omega}\mu(\omega)\ln(\mu(\omega)),
+\end{align*}
+and $\chi>0$ is a parameter. 
+\vskip5pt 
+\framebreak
+It follows that the mass of HHs paying attention to CB is $1-\delta F(c(\pi))$. 
+\vskip5pt 
+The posterior beliefs of HHs not paying attention remain as the common prior belief $\mu_0$. 
+\vskip5pt 
+Therefore, the expected utility of the CB is:
+\begin{equation}
+\label{expected_uc}
+U(\pi,v)=\mathbb{E}_{\mu_0^c}[u(\mu_0,v)]\delta F(c(\pi)) + \mathbb{E}_{\{\pi,\mu_0^c\}}[u(\mu_s,v)][1-\delta F(c(\pi))]
+\end{equation}
+The timing is as follows:
+\begin{enumerate}
+    \item CB chooses $v$.
+    \item CB chooses information $\pi$.
+    \item Each receiver devoting attention receives a message and updates beliefs.
+\end{enumerate}
+\vskip5pt
+\framebreak
+We solve the model by backward induction.
+\begin{itemize}
+    \item We start from the information design, taking as given the flexibility $v$. The second component in \eqref{uc} does not depend on the expected inflation $x^e$. Therefore, it is irrelevant for CB when designing $\pi$.
+\end{itemize}
+\vskip5pt
+We make the following assumptions:
+\begin{assumption}
+    \label{Ass1}
+    HHs form a rational inflation expectation:
+    \begin{equation}
+    \label{expectedinflation}
+    x^e(\mu)=\mu x(\omega_1)+(1-\mu)x(\omega_2)=x^T+v_1\mu-v_2(1-\mu)
+    \end{equation}
+\end{assumption}
+\begin{assumption}
+\label{Ass2}
+    Attention is uniformly distributed: $F(\cdot)=U[0,1]$ and $\chi=\frac{1}{\ln(2)}$.
+\end{assumption}
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]
+    \frametitle{Results}
+    Our framework encompasses several dimensions:
+    \begin{enumerate}
+        \item Heterogeneous beliefs
+        \item Asymmetric shocks
+        \item Inattentive households
+    \end{enumerate}
+    \vskip10pt
+    We present preliminary results:
+    \begin{enumerate}
+        \item Analytical analysis for a symmetric benchmark.
+        \item Numerical results for the full model.
+    \end{enumerate}
+    \vskip10pt
+    \framebreak
+    Under Assumptions \ref{Ass1}-\ref{Ass2}, CB's problem is:
+    \begin{equation}
+    \begin{split}
+        \min_{\pi} \ & \ \delta c(\pi)\Bigg\{\mu_0^c\left[\omega_1-\gamma(v_1+v_2)(1-\mu_0)\right]^2+\\
+        \ & \ +(1-\mu_0^c)\left[\omega_2+\gamma(v_1+v_2)\mu_0\right]^2\Bigg\}+\\
+        \ & \ +[1-\delta c(\pi)]\Bigg\{\mu_0^c\bigg[\pi(s_1|\omega_1)(\omega_1-\gamma (v_1+v_2) (1-\mu_1))^2+\\
+        \ & \ +\pi(s_2|\omega_1)(\omega_1-\gamma (v_1+v_2) (1-\mu_2))^2\bigg]+ \\
+        \ & \ +(1-\mu_0^c)\bigg[\pi(s_2|\omega_2)(\omega_2+\gamma (v_1+v_2) \mu_2)^2+\\
+        \ & \ +\pi(s_1|\omega_2)(\omega_2+\gamma (v_1+v_2) \mu_1)^2 \bigg]\Bigg\}
+    \end{split}
+    \end{equation}
+    We need two further assumptions in the benchmark:
+    \begin{assumption}
+        \label{Ass3}
+        The unemployment shocks are symmetric, that is, $\omega_1=-\omega_2=\omega$.
+    \end{assumption}
+    \begin{assumption}
+        \label{Ass4}
+        Prior beliefs are homogeneous and neutral, that is, $\mu_0=\mu_0^c=\frac{1}{2}$.
+    \end{assumption}
+    Under assumptions \ref{Ass3}-\ref{Ass4}, the F.O.C.s are symmetric:
+    \begin{enumerate}
+        \item We focus on symmetric solutions such that $\pi(s_1|\omega_1)=\pi(s_2|\omega_2)=x$;
+        \item $x\in\left[\frac{1}{2},1\right]$ represents the precision of CB's recommendations.
+    \end{enumerate}
+    \begin{proposition}[Stage two with $\delta=0$]
+    \label{Prop1}
+    Under Assumptions \ref{Ass1}, \ref{Ass3}, and \ref{Ass4}, the CB's information design problem has a corner solution: $\pi$ is either fully informative (i.e., $x=1$) or uninformative (i.e., $x=\frac{1}{2}$). 
+\end{proposition} 
+Indeed, the F.O.C.s reduces to the following condition:
+\begin{equation}
+    \gamma(v_1+v_2)[4\omega-\gamma(v_1+v_2)](2x-1)\gtreqqless 0
+    \end{equation}
+For any $x$, the former is always negative (positive) if $\gamma(v_1+v_2)[4\omega-\gamma(v_1+v_2)]<0$ ($>0$). 
+\vskip10pt Therefore, $x=1$ is the global min if $\gamma(v_1+v_2)[4\omega-\gamma(v_1+v_2)]<0$. Otherwise, $x=\frac{1}{2}$ is the global min.
+\vskip5pt 
+\framebreak
+Given Proposition \ref{Prop1}, and the fact that $\gamma,\omega,v_1$ and $v_2$ are all positive, $\pi$ is fully informative if and only if $4\omega<\gamma(v_1+v_2)$. The optimal solution to the first stage is described in the following proposition.
+
+\begin{proposition}[First stage with $\delta=0$]
+    \label{Prop2}
+    Under Assumptions \ref{Ass1}, \ref{Ass3}, and \ref{Ass4}, the optimal flexibility provided by the CB is
+    \begin{equation}
+        v_1=v_2=\left(\frac{\gamma}{\gamma^2+\alpha}\right)\omega
+    \end{equation}
+    which implies that the optimal information design is uninformative.
+\end{proposition}
+    \begin{proposition}[$\delta\neq0$]
+    \label{Prop2}
+        Under Assumptions \ref{Ass1}-\ref{Ass4}, the solution to the CB's information design problem solves the following condition:
+        \begin{small}
+        \begin{equation}
+            \gamma(v_1+v_2)[4\omega-\gamma(v_1+v_2)]\left\{[1-\delta c(\pi)](2x-1)+2\delta c^\prime(\pi)\left[x(1-x)-\frac{1}{4}\right]\right\}=0
+        \end{equation}
+        \end{small}
+        where
+        \begin{eqnarray}
+            c(\pi)=\chi \left[\ln(2)+x\ln(x)+(1-x)\ln(1-x)\right] \\
+            c^\prime(\pi)=\frac{\chi}{2}\left[\ln\left(x\right)-\ln(1-x)\right]
+        \end{eqnarray}
+        Provided $4\omega\geq\gamma(v_1+v_2)$, the problem has corner solutions: either $x=\frac{1}{2}$ or $x=1$. The optimal flexibility is the same as before. Thus, in a symmetric setting, CB provides no information.
+    \end{proposition}
+    We use numerical analysis to solve the CB's problem when relaxing assumptions \ref{Ass3}-\ref{Ass4}.
+    \vskip10pt
+    We focus on the information design stage, taking as given $v_1,v_2$. 
+    \vskip10pt We focus on the case where $4\omega\geq\gamma(v_1+v_2)$
+    \begin{table}[htp!]
+    \centering
+    \begin{tabular}{@{}ccccccccc@{}}
+    \toprule
+    $\delta$ & $\omega_1$ & $\omega_2$ & $\mu_0$ & $\mu_0^c$ & $\gamma$ & $x_T$ & $v_1$ & $v_2$ \\ \midrule
+    0.5      & 1          & -1         & 1/2     & 1/2       & 1      & 2     & 1 & 1    \\ \bottomrule
+    \end{tabular}
+    \caption{Benchmark Parameters}
+    \label{tab:bchmrk_param}
+    \end{table}
+    \framebreak
+    \begin{figure}[htp!]
+    \centering
+    \includegraphics[width=0.49\textwidth]{figures/V8/delta_1/fig_optimal_π_across_μ_0.pdf}
+    \includegraphics[width=0.49\textwidth]{figures/V8/delta_1/fig_posterior_across_μ_0.pdf}
+    \end{figure}
+    CB intervenes to fix HHs misperceptions: excessive optimism or pessimism about the state of the economy
+    \framebreak
+    \begin{figure}[htp!]
+    \centering
+    \includegraphics[width=0.49\textwidth]{figures/V8/delta_1/fig_optimal_π_across_μ_0_c_μ_0_0.1.pdf}
+    \includegraphics[width=0.49\textwidth]{figures/V8/delta_1/fig_posterior_across_μ_0_c_μ_0_0.1.pdf}
+    \end{figure}
+    In the graph, $\mu_0 = 0.1$. CB intervenes when there is a sufficiently large difference in prior beliefs.
+    \vskip10pt
+    \framebreak
+    What if the bad shocks become more devastating? 
+    \vskip10pt
+    The bad state is often associated with much worse outcomes than the good state. 
+    \vskip10pt
+    In our setting, the unemployment rate soars in the bad state but drops mildly in the good state. That is, $\omega_1 > -\omega_2$.
+    \vskip10pt Thus, we consider two cases:
+    \begin{enumerate}
+        \item $\omega_1 = \frac{3}{2}$;
+        \item $\omega_1 = 2$
+    \end{enumerate}
+    while holding $\omega_2 = -1$. 
+\vskip10pt
+\framebreak
+When $\omega_1 = \frac{3}{2}$, the results are:
+\begin{figure}[htp!]
+\centering
+\includegraphics[width=0.49\textwidth]{figures/V8/delta_1/fig_optimal_π_across_μ_0_ω_1_1.5_ω_2_-1.pdf}
+\includegraphics[width=0.49\textwidth]{figures/V8/delta_1/fig_posterior_across_μ_0_ω_1_1.5_ω_2_-1.pdf}
+\end{figure}
+\vskip10pt
+\framebreak
+When $\omega_1 = 2$, the results are:
+\begin{figure}[htp!]
+\centering
+\includegraphics[width=0.49\textwidth]{figures/V8/delta_1/fig_optimal_π_across_μ_0_ω_1_2_ω_2_-1.pdf}
+\includegraphics[width=0.49\textwidth]{figures/V8/delta_1/fig_posterior_across_μ_0_ω_1_2_ω_2_-1.pdf}
+\end{figure}
+The asymmetric information provision allows CB to increase the inflation surprise when more needed, that is, when the economy is weak.
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Conclusion}
+    We address the problem of a central bank that wishes to guide the economy but faces inattentive households.
+    \vskip10pt
+    We are still working on several dimensions:
+    \begin{enumerate}
+        \item The optimal flexibility $v$.
+        \item Calibrate the model to different monetary areas (e.g. Euro zone) to characterize the optimal information policy of each central bank.
+        \item Imperfect expectations by households: better definition for naivety.
+    \end{enumerate}
+    \vskip10pt
+    We are happy to hear your suggestions!
+\end{frame}
+
+\begin{frame}
+	\begin{huge}
+		\centerline{Thank you for your \textbf{limited} attention!}
+	\end{huge}
+\end{frame}
+
+\begin{frame}<presentation:0>[noframenumbering]
+	\bibliographystyle{ecta}
+	\bibliography{references}
+\end{frame}
+
+
+\end{document}
