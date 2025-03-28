@@ -22,6 +22,7 @@ else
 end
 # PATH = mkpath(PWD * FL * VER)
 PATH_FIG = mkpath(PWD * FL * "figures" * FL * VER)
+dg_p, dg_f = 1, 6
 
 #==============#
 # BP functions #
@@ -66,14 +67,14 @@ obj_CB(x_1, x_2, μ_0, μ_0_c, ω_1, ω_2, δ, γ, x_T, ν_1, ν_2, α, θ) = ob
     ν_1::Float64 = 1.0
     ν_2::Float64 = 1.0
     α::Float64 = 1.0
-    θ::Float64 = 0.5
+    θ::Float64 = 1.0
     ϵ_x::Float64 = 1E-6
     ϵ_x_p::Float64 = 1E-0
     ϵ_tol::Float64 = 1E-6
     max_iter::Int64 = 12000
 end
 BP = Benchmark_Parameters()
-PATH_FIG_para = mkpath(PATH_FIG * FL * "γ=$(round(BP.γ,digits=1))-μ_0=$(round(BP.μ_0,digits=1))-α=$(round(BP.α,digits=1))-θ=$(round(BP.θ,digits=1))-δ=$(round(BP.δ,digits=1))-ω_1=$(round(BP.ω_1,digits=1))-ω_2=$(round(BP.ω_2,digits=1))")
+PATH_FIG_para = mkpath(PATH_FIG * FL * "γ=$(round(BP.γ,digits=dg_p))-μ_0=$(round(BP.μ_0,digits=dg_p))-α=$(round(BP.α,digits=dg_p))-θ=$(round(BP.θ,digits=dg_p))-δ=$(round(BP.δ,digits=dg_p))-ω_1=$(round(BP.ω_1,digits=dg_p))-ω_2=$(round(BP.ω_2,digits=dg_p))")
 
 #==================#
 # benchmark result #
@@ -210,7 +211,7 @@ filename_x = "fig_optimal_x_by_μ_0"
 filename_γ = "fig_optimal_γ_by_μ_0"
 μ_0_res = zeros(μ_0_size, 8)
 optimal_communication_func!(BP, μ_0_res, "μ_0", μ_0_size, μ_0_grid)
-# μ_0_res = round.(μ_0_res, digits=4)
+μ_0_res = round.(μ_0_res, digits=dg_f)
 
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
@@ -248,7 +249,7 @@ filename_γ = "fig_optimal_γ_by_μ_0"
 filename_ν = "fig_optimal_ν_by_μ_0"
 μ_0_res_ν = zeros(μ_0_size, 8)
 optimal_flexibility_func!(BP, μ_0_res_ν, "μ_0", μ_0_size, μ_0_grid)
-# μ_0_res_ν = round.(μ_0_res_ν, digits=4)
+μ_0_res_ν = round.(μ_0_res_ν, digits=dg_f)
 
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
@@ -281,7 +282,7 @@ filename_x = "fig_optimal_x_by_μ_0_c"
 filename_γ = "fig_optimal_γ_by_μ_0_c"
 μ_0_c_res = zeros(μ_0_c_size, 8)
 optimal_communication_func!(BP, μ_0_c_res, "μ_0_c", μ_0_c_size, μ_0_c_grid)
-# μ_0_c_res = round.(μ_0_c_res, digits=4)
+μ_0_c_res = round.(μ_0_c_res, digits=dg_f)
 
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
@@ -319,7 +320,7 @@ filename_γ = "fig_optimal_γ_by_μ_0_c"
 filename_ν = "fig_optimal_ν_by_μ_0_c"
 μ_0_c_res_ν = zeros(μ_0_c_size, 8)
 optimal_flexibility_func!(BP, μ_0_c_res_ν, "μ_0_c", μ_0_c_size, μ_0_c_grid)
-# μ_0_c_res_ν = round.(μ_0_c_res_ν, digits=4)
+μ_0_c_res_ν = round.(μ_0_c_res_ν, digits=dg_f)
 
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
@@ -352,7 +353,7 @@ filename_x = "fig_optimal_x_by_ω_1"
 filename_γ = "fig_optimal_γ_by_ω_1"
 ω_1_res = zeros(ω_1_size, 8)
 optimal_communication_func!(BP, ω_1_res, "ω_1", ω_1_size, ω_1_grid)
-# ω_1_res = round.(ω_1_res, digits=4)
+ω_1_res = round.(ω_1_res, digits=dg_f)
 
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
@@ -390,7 +391,7 @@ filename_γ = "fig_optimal_γ_by_ω_1"
 filename_ν = "fig_optimal_ν_by_ω_1"
 ω_1_res_ν = zeros(ω_1_size, 8)
 optimal_flexibility_func!(BP, ω_1_res_ν, "ω_1", ω_1_size, ω_1_grid)
-# ω_1_res_ν = round.(ω_1_res_ν, digits=4)
+ω_1_res_ν = round.(ω_1_res_ν, digits=dg_f)
 
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
@@ -423,7 +424,7 @@ filename_x = "fig_optimal_x_by_ω_2"
 filename_γ = "fig_optimal_γ_by_ω_2"
 ω_2_res = zeros(ω_2_size, 8)
 optimal_communication_func!(BP, ω_2_res, "ω_2", ω_2_size, ω_2_grid)
-# ω_2_res = round.(ω_2_res, digits=4)
+ω_2_res = round.(ω_2_res, digits=dg_f)
 
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
@@ -461,7 +462,7 @@ filename_γ = "fig_optimal_γ_by_ω_2"
 filename_ν = "fig_optimal_ν_by_ω_2"
 ω_2_res_ν = zeros(ω_2_size, 8)
 optimal_flexibility_func!(BP, ω_2_res_ν, "ω_2", ω_2_size, ω_2_grid)
-# ω_2_res_ν = round.(ω_2_res_ν, digits=4)
+ω_2_res_ν = round.(ω_2_res_ν, digits=dg_f)
 
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
