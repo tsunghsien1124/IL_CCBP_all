@@ -20,8 +20,8 @@ if Sys.iswindows()
 else
     FL = "/"
 end
-PATH = mkpath(PWD * FL * VER)
-PATH_FIG = mkpath(PATH * FL * "Figures")
+# PATH = mkpath(PWD * FL * VER)
+PATH_FIG = mkpath(PWD * FL * "figures" * FL * VER)
 
 #==============#
 # BP functions #
@@ -66,7 +66,7 @@ obj_CB(x_1, x_2, μ_0, μ_0_c, ω_1, ω_2, δ, γ, x_T, ν_1, ν_2, α, θ) = ob
     ν_1::Float64 = 1.0
     ν_2::Float64 = 1.0
     α::Float64 = 1.0
-    θ::Float64 = 0.0
+    θ::Float64 = 1.0
     ϵ_x::Float64 = 1E-6
     ϵ_x_p::Float64 = 1E-0
     ϵ_tol::Float64 = 1E-6
@@ -223,10 +223,10 @@ save(PATH_FIG_para_x * FL * filename_x * ".pdf", fig)
 save(PATH_FIG_para_x * FL * filename_x * ".png", fig)
 
 # plot inflation surprise γ * (x_e - x_r)
-γ_μ_1_ω_1 = BP.γ .* (x_e.(μ_0_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
-γ_μ_1_ω_2 = BP.γ .* (x_e.(μ_0_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
-γ_μ_2_ω_1 = BP.γ .* (x_e.(μ_0_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
-γ_μ_2_ω_2 = BP.γ .* (x_e.(μ_0_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
+γ_μ_1_ω_1 = BP.γ .* (x_e.(μ_0_grid, μ_0_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
+γ_μ_1_ω_2 = BP.γ .* (x_e.(μ_0_grid, μ_0_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
+γ_μ_2_ω_1 = BP.γ .* (x_e.(μ_0_grid, μ_0_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
+γ_μ_2_ω_2 = BP.γ .* (x_e.(μ_0_grid, μ_0_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"HH prior $\mu_0$")
 lines!(ax, μ_0_grid, γ_μ_1_ω_1, label=L"(μ_1, \omega_1)", color=:blue, linestyle=nothing, linewidth=4)
