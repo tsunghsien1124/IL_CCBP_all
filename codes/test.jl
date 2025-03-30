@@ -1,3 +1,33 @@
+#======================#
+# Shannon entropy cost #
+#======================#
+using GLMakie
+using CairoMakie
+
+τ_1(x_1, x_2, μ) = x_1 * μ + (1.0 - x_2) * (1.0 - μ)
+μ_1(x_1, x_2, μ) = x_1 * μ / τ_1(x_1, x_2, μ)
+τ_2(x_1, x_2, μ) = (1.0 - x_1) * μ + x_2 * (1.0 - μ)
+μ_2(x_1, x_2, μ) = (1.0 - x_1) * μ / τ_2(x_1, x_2, μ)
+H(μ) = -(μ * log(μ) + (1.0 - μ) * log((1.0 - μ)))
+c_log2(x_1, x_2, μ) = (1.0 / log(2.0)) * (H(μ) - τ_1(x_1, x_2, μ) * H(μ_1(x_1, x_2, μ)) - τ_2(x_1, x_2, μ) * H(μ_2(x_1, x_2, μ)))
+χ(μ) = 1 / H(μ)
+c_χ(x_1, x_2, μ) = χ(μ) * (H(μ) - τ_1(x_1, x_2, μ) * H(μ_1(x_1, x_2, μ)) - τ_2(x_1, x_2, μ) * H(μ_2(x_1, x_2, μ)))
+
+μ_0 = 0.9
+x_1_grid = collect(0.500:0.0005:0.999)
+x_2_grid = collect(0.500:0.0005:0.999)
+c_log2_grid = [c_log2(x_1_i, x_2_i, μ_0) for x_1_i in x_1_grid, x_2_i in x_2_grid]
+c_χ_grid = [c_χ(x_1_i, x_2_i, μ_0) for x_1_i in x_1_grid, x_2_i in x_2_grid]
+
+joint_limits = (0.0, 1.0)
+fig_log2, ax_log2, hm_log2 = heatmap(x_1_grid, x_2_grid, c_log2_grid, colorrange = joint_limits)
+ax_χ, hm_χ = heatmap(fig_log2[1, end+1], x_1_grid, x_2_grid, c_χ_grid, colorrange = joint_limits)
+Colorbar(fig_log2[:, end+1], hm_log2)
+fig_log2[0, :] = Label(fig_log2, L"\chi=1/log(2),\, \chi=1/H(\mu_0),\, \mu_0=0.9")
+fig_log2[2, :] = Label(fig_log2, L"x_1")
+fig_log2[:, 0] = Label(fig_log2, L"x_2")
+fig_log2
+
 #=========================================#
 # JuMP example (1) -- Nested optimization #
 #=========================================#
