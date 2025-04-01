@@ -336,11 +336,10 @@ Therefore, information design is helpful only if the monetary policy's flexibili
 \subsection{Skewed HHs}
 We consider an alternative distribution for the attention budget such that many HHs have a low attention budget, i.e., a right-skewed distribution of attention budget, and we analyze the impact of lower attention compared to the case where attention is uniformly distributed. In particular, we use the Kumaraswamy distribution, whose probability density function takes the following form:
 \begin{align}
-    f(x;a,b) = a \cdot b \cdot x^{a-1} \cdot (1-x^a)^{b-1}
+    f(x;a,b) & = a \cdot b \cdot x^{a-1} \cdot (1-x^a)^{b-1} \\
+    F(x;a,b) & = 1 - (1-x^a)^b 
 \end{align}
 where $a$ and $b$ are non-negative shape parameters. This distribution collapses to a uniform distribution when $a=b=1$ and becomes right-skewed with $a=2$ and $b=5$. Our benchmark result (Proposition \ref{Prop3}) does not depend on the distribution of the attention budget. However, the latter has an effect when we consider asymmetric scenarios (Section \ref{sec:bchmrk_res}). In particular, we investigate how the shape parameters affect the effectiveness of central bank communication, e.g., $\partial \pi/ \partial a$.
-
-\textcolor{red}{In the symmetric benchmark, there is no change. Actually, I have improved it removing the assumption about the distribution. The solution is always the same. But you can check whether there are differences when the setting is asymmetric. Also check the new Assumption \ref{Ass2}: I guess you have to check all simulations, because we were always assuming $\chi=\frac{1}{\ln(2)}$, but $\chi$ should depend on $\mu_0$.}
 
 \subsection{Irrational Inflation Expectations}
 In this section, we relax Assumption \ref{Ass1}. In particular, we assume that beliefs are adaptive: 
@@ -368,8 +367,6 @@ Under the symmetric benchmark---i.e., Assumptions \ref{Ass3} and \ref{Ass4} hold
     which implies that the optimal information design is uninformative.
 \end{proposition}
 
-\textcolor{red}{There may be an effect in the asymmetric case.}
-
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.49\textwidth]{figures/V11/γ=10.0-μ_0=0.5-α=1.0-θ=0.5-δ=0.5-ω_1=1.0-ω_2=-1.0/communication/fig_optimal_x_by_μ_0.pdf}
@@ -379,9 +376,9 @@ Under the symmetric benchmark---i.e., Assumptions \ref{Ass3} and \ref{Ass4} hold
 \end{figure}
 
 
-\subsection{Uncertainty about Shock Magnitude}
+\subsection{Imperfect flexibility}
 
-In this Section, we assume that CB faces some uncertainty about the magnitude of the unemployment shock when the economy is weak. In particular, we assume that CB cannot flexibly adjust to any possible realization of the negative shock (it can only vary its monetary policy based on the sign of the shock, as in the main model). However, CB can diversify its information policy based on the shock's magnitude.
+In this Section, we assume that CB cannot flexibly adjust to any possible realization of the negative shock. In particular, there are two possible realizations of the negative shock but CB can only vary its monetary policy based on the sign of the shock, as in the main model. However, CB can diversify its information policy based on the shock's magnitude.
 
 Formally, the set of states becomes $\Omega \coloneqq \{\omega_1, \eta\omega_1,\omega_2\}$, with $\eta>0$.
 The actual inflation, as a function of the state of the economy, becomes: 
@@ -413,7 +410,11 @@ This problem is asymmetric by design. Therefore, we rely on numerical methods to
 
 In addition to the uncertainty about the magnitude of the negative shock, CB may also face HHs who completely neglect such uncertainty. For instance, in the spirit of \cite{galperti2019persuasion}, we consider an alternative vector of prior belief for HHs: $\bar{\mu}_0\coloneqq\left(\mu_0,0,1-\mu_0\right)$. In particular, if the optimal $\pi$ reveals state $\eta \omega_1$, then HHs adopt the vector $\bar{\mu}_0\coloneqq\left(\frac{\mu_0}{2},\frac{\mu_0}{2},1-\mu_0\right)$ as prior beliefs.
 
-Another possibility is to assume---in the spirit of \cite{evsyukova2024information}---that HHs are unaware of the existence of uncertainty about the negative shock. In particular, CB conceives all possible states in $\Omega$, whereas HHs conceive as state space $\Omega_{H}\coloneqq\{\bar{\omega}_1,\omega_2\}$, where $\bar{\omega}_1$ is a bundle of $\omega_1$ and $\eta\omega_1$, meaning that HHs cannot distinguish between these two. It follows that $\mu_0$ is the prior belief of $\bar{\omega}_1$ and two signals are sufficient, i.e., $S=\{s_1,s_2\}$. We consider the extreme scenario where HHs identifies $\bar{\omega}_1$ with $\omega_1$, completely neglecting the possibility of the shock $\eta \omega_1$. As a result, CB can inflate any recommendation sending it in the event of a shock $\eta \omega_1$, since HHs would not account for the possibility of evidence being produced under such event.
+Another possibility is to assume---in the spirit of \cite{evsyukova2024information}---that HHs are unaware of the existence of uncertainty about the negative shock. In particular, CB conceives all possible states in $\Omega$, whereas HHs conceive as state space $\Omega_{H}\coloneqq\{\bar{\omega}_1,\omega_2\}$, where $\bar{\omega}_1$ is a bundle of $\omega_1$ and $\eta\omega_1$, meaning that HHs cannot distinguish between these two. It follows that $\mu_0$ is the prior belief of $\bar{\omega}_1$ and two signals are sufficient, i.e., $S=\{s_1,s_2\}$. We consider the extreme scenario where HHs identify $\bar{\omega}_1$ with $\omega_1$, completely neglecting the possibility of the shock $\eta \omega_1$. As a result, CB can inflate any recommendation sending it in the event of a shock $\eta \omega_1$, since HHs would not account for the possibility of evidence being produced under such event.
+
+\subsection{Uncertainty about Shock Magnitude}
+
+In this Section, we assume that CB faces some uncertainty about the likelihood of shocks when choosing its monetary policy. In particular, in the first stage of the game, CB chooses its monetary policy---solving the problem in \eqref{minproblem2}---without knowing the exact likelihood of the shocks $\mu_0^c$. CB only knows that priors have distribution an atomless distribution $G(\cdot)$ with support $[0,1]$. Before the second stage, CB discovers its priors. Therefore, CB can use information design to correct a wrongly specified monetary policy. Since CB knows its priors, the information design stage is the same as in the main analysis. We thus focus on the response of the monetary policy to uncertainty, and the implications for CB's communication strategy. Our numerical analysis shows that
 
 
 
@@ -975,6 +976,8 @@ which satisfies \eqref{constraintomega2}.
 \includegraphics[width=0.49\textwidth]{figures/V9/γ=1.0-μ_0=0.5-α=0.0/fig_optimal_x_by_ω_2.pdf}
 \end{figure}
 
+\section{List of Counterfactuals}
 
+We consider three distributions $(a,b) \in \{(1,1)^*, (2,5), (5,2)\}$. For a given $(a,b)$, we vary two combinations of policy parameters $(\gamma,\alpha) \in \{(10,1)^*, (1,1)\}$. For a given set of $(a,b)$ and $(\gamma, \alpha)$, we vary six combinations of household behavioral parameters $(\theta,\delta) \in \{(0.5, 0), (1, 0), (0.5, 0.5), (1, 0.5)^*, (0.5, 1), (1, 1)\}$. For a given set of $(a,b)$ , $(\gamma,\alpha)$, and $(\theta,\delta)$, we vary eight combinations of beliefs and shocks $(\mu_0, \mu^c, \omega_1, \omega_2)$ where $\mu_0 \in \{0.1, 0.5^*\}$, $\mu_0^c \in \{0.5^*\}$, $\omega_1 \in \{1^*, 2\}$, and $\omega_2 \in \{-1^*, -2\}$. As a result, $3 \times 2 \times 6 \times 8 = 288$ cases to be solved. The results of optimal communication and flexibility policies for any given set of parameters are stored in their respective folder.
 
 \end{document}
