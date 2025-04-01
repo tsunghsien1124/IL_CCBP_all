@@ -216,9 +216,10 @@ optimal_communication_func!(BP, μ_0_res, "μ_0", μ_0_size, μ_0_grid)
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"HH prior $\mu_0$")
+ylims!(ax, -0.05, 1.05)
 lines!(ax, μ_0_grid, μ_0_res[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
 lines!(ax, μ_0_grid, μ_0_res[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
-axislegend(position=:ct, nbanks=2, patchsize=(40, 20))
+axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
 fig
 save(PATH_FIG_para_x * FL * filename_x * ".pdf", fig)
 save(PATH_FIG_para_x * FL * filename_x * ".png", fig)
@@ -230,10 +231,10 @@ save(PATH_FIG_para_x * FL * filename_x * ".png", fig)
 γ_μ_2_ω_2 = BP.γ .* (x_e.(μ_0_grid, μ_0_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"HH prior $\mu_0$")
-lines!(ax, μ_0_grid, γ_μ_1_ω_1, label=L"(μ_1, \omega_1)", color=:blue, linestyle=nothing, linewidth=4)
-lines!(ax, μ_0_grid, γ_μ_1_ω_2, label=L"(μ_1, \omega_2)", color=:red, linestyle=:dash, linewidth=4)
-lines!(ax, μ_0_grid, γ_μ_2_ω_1, label=L"(μ_2, \omega_1)", color=:black, linestyle=:dot, linewidth=4)
-lines!(ax, μ_0_grid, γ_μ_2_ω_2, label=L"(μ_2, \omega_2)", color=:green, linestyle=:dashdot, linewidth=4)
+lines!(ax, μ_0_grid, γ_μ_1_ω_1, label=L"(\mu_1, \omega_1)", color=:blue, linestyle=nothing, linewidth=4)
+lines!(ax, μ_0_grid, γ_μ_1_ω_2, label=L"(\mu_1, \omega_2)", color=:red, linestyle=:dash, linewidth=4)
+lines!(ax, μ_0_grid, γ_μ_2_ω_1, label=L"(\mu_2, \omega_1)", color=:black, linestyle=:dot, linewidth=4)
+lines!(ax, μ_0_grid, γ_μ_2_ω_2, label=L"(\mu_2, \omega_2)", color=:green, linestyle=:dashdot, linewidth=4)
 if BP.γ == 10.0
     axislegend(position=(1.0, 0.25), nbanks=2, patchsize=(40, 20))
 elseif BP.γ == 1.0
@@ -254,9 +255,10 @@ optimal_flexibility_func!(BP, μ_0_res_ν, "μ_0", μ_0_size, μ_0_grid)
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"HH prior $\mu_0$")
+ylims!(ax, -0.05, 1.05)
 lines!(ax, μ_0_grid, μ_0_res_ν[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
 lines!(ax, μ_0_grid, μ_0_res_ν[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
-axislegend(position=:ct, nbanks=2, patchsize=(40, 20))
+axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
 fig
 save(PATH_FIG_para_ν * FL * filename_x * ".pdf", fig)
 save(PATH_FIG_para_ν * FL * filename_x * ".png", fig)
@@ -287,6 +289,7 @@ optimal_communication_func!(BP, μ_0_c_res, "μ_0_c", μ_0_c_size, μ_0_c_grid)
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"CB prior $\mu^c_0$")
+ylims!(ax, -0.05, 1.05)
 lines!(ax, μ_0_c_grid, μ_0_c_res[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
 lines!(ax, μ_0_c_grid, μ_0_c_res[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
 axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
@@ -301,13 +304,13 @@ save(PATH_FIG_para_x * FL * filename_x * ".png", fig)
 γ_μ_2_ω_2 = BP.γ .* (x_e.(BP.μ_0, μ_0_c_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"CB prior $\mu^c_0$")
-lines!(ax, μ_0_c_grid, γ_μ_1_ω_1, label=L"(μ_1, \omega_1)", color=:blue, linestyle=nothing, linewidth=4)
-lines!(ax, μ_0_c_grid, γ_μ_1_ω_2, label=L"(μ_1, \omega_2)", color=:red, linestyle=:dash, linewidth=4)
-lines!(ax, μ_0_c_grid, γ_μ_2_ω_1, label=L"(μ_2, \omega_1)", color=:black, linestyle=:dot, linewidth=4)
-lines!(ax, μ_0_c_grid, γ_μ_2_ω_2, label=L"(μ_2, \omega_2)", color=:green, linestyle=:dashdot, linewidth=4)
-if BP.μ_0 == 0.5 
+lines!(ax, μ_0_c_grid, γ_μ_1_ω_1, label=L"(\mu_1, \omega_1)", color=:blue, linestyle=nothing, linewidth=4)
+lines!(ax, μ_0_c_grid, γ_μ_1_ω_2, label=L"(\mu_1, \omega_2)", color=:red, linestyle=:dash, linewidth=4)
+lines!(ax, μ_0_c_grid, γ_μ_2_ω_1, label=L"(\mu_2, \omega_1)", color=:black, linestyle=:dot, linewidth=4)
+lines!(ax, μ_0_c_grid, γ_μ_2_ω_2, label=L"(\mu_2, \omega_2)", color=:green, linestyle=:dashdot, linewidth=4)
+if BP.μ_0 == 0.5
     axislegend(position=(1.0, 0.15), nbanks=2, patchsize=(40, 20))
-elseif BP.μ_0 == 0.1 
+elseif BP.μ_0 == 0.1
     axislegend(position=:rc, nbanks=2, patchsize=(40, 20))
 end
 fig
@@ -325,6 +328,7 @@ optimal_flexibility_func!(BP, μ_0_c_res_ν, "μ_0_c", μ_0_c_size, μ_0_c_grid)
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"CB prior $\mu^c_0$")
+ylims!(ax, -0.05, 1.05)
 lines!(ax, μ_0_c_grid, μ_0_c_res_ν[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
 lines!(ax, μ_0_c_grid, μ_0_c_res_ν[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
 axislegend(position=:ct, nbanks=2, patchsize=(40, 20))
@@ -358,6 +362,7 @@ optimal_communication_func!(BP, ω_1_res, "ω_1", ω_1_size, ω_1_grid)
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"Unemployment shock $\omega_1$")
+ylims!(ax, -0.05, 1.05)
 lines!(ax, ω_1_grid, ω_1_res[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
 lines!(ax, ω_1_grid, ω_1_res[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
 axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
@@ -372,13 +377,13 @@ save(PATH_FIG_para_x * FL * filename_x * ".png", fig)
 γ_μ_2_ω_2 = BP.γ .* (x_e.(BP.μ_0, ω_1_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"Unemployment shock $\omega_1$")
-lines!(ax, ω_1_grid, γ_μ_1_ω_1, label=L"(μ_1, \omega_1)", color=:blue, linestyle=nothing, linewidth=4)
-lines!(ax, ω_1_grid, γ_μ_1_ω_2, label=L"(μ_1, \omega_2)", color=:red, linestyle=:dash, linewidth=4)
-lines!(ax, ω_1_grid, γ_μ_2_ω_1, label=L"(μ_2, \omega_1)", color=:black, linestyle=:dot, linewidth=4)
-lines!(ax, ω_1_grid, γ_μ_2_ω_2, label=L"(μ_2, \omega_2)", color=:green, linestyle=:dashdot, linewidth=4)
-if BP.μ_0 == 0.5 
+lines!(ax, ω_1_grid, γ_μ_1_ω_1, label=L"(\mu_1, \omega_1)", color=:blue, linestyle=nothing, linewidth=4)
+lines!(ax, ω_1_grid, γ_μ_1_ω_2, label=L"(\mu_1, \omega_2)", color=:red, linestyle=:dash, linewidth=4)
+lines!(ax, ω_1_grid, γ_μ_2_ω_1, label=L"(\mu_2, \omega_1)", color=:black, linestyle=:dot, linewidth=4)
+lines!(ax, ω_1_grid, γ_μ_2_ω_2, label=L"(\mu_2, \omega_2)", color=:green, linestyle=:dashdot, linewidth=4)
+if BP.μ_0 == 0.5
     axislegend(position=(1.0, 0.15), nbanks=2, patchsize=(40, 20))
-elseif BP.μ_0 == 0.1 
+elseif BP.μ_0 == 0.1
     axislegend(position=:rc, nbanks=2, patchsize=(40, 20))
 end
 fig
@@ -396,6 +401,7 @@ optimal_flexibility_func!(BP, ω_1_res_ν, "ω_1", ω_1_size, ω_1_grid)
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"Unemployment shock $\omega_1$")
+ylims!(ax, -0.05, 1.05)
 lines!(ax, ω_1_grid, ω_1_res_ν[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
 lines!(ax, ω_1_grid, ω_1_res_ν[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
 axislegend(position=:ct, nbanks=2, patchsize=(40, 20))
@@ -429,6 +435,7 @@ optimal_communication_func!(BP, ω_2_res, "ω_2", ω_2_size, ω_2_grid)
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"Unemployment shock $\omega_2$")
+ylims!(ax, -0.05, 1.05)
 lines!(ax, ω_2_grid, ω_2_res[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
 lines!(ax, ω_2_grid, ω_2_res[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
 axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
@@ -437,19 +444,19 @@ save(PATH_FIG_para_x * FL * filename_x * ".pdf", fig)
 save(PATH_FIG_para_x * FL * filename_x * ".png", fig)
 
 # plot inflation surprise γ * (x_e - x_r)
-γ_μ_1_ω_2 = BP.γ .* (x_e.(BP.μ_0, ω_2_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
+γ_μ_1_ω_1 = BP.γ .* (x_e.(BP.μ_0, ω_2_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
 γ_μ_1_ω_2 = BP.γ .* (x_e.(BP.μ_0, ω_2_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
-γ_μ_2_ω_2 = BP.γ .* (x_e.(BP.μ_0, ω_2_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
+γ_μ_2_ω_1 = BP.γ .* (x_e.(BP.μ_0, ω_2_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
 γ_μ_2_ω_2 = BP.γ .* (x_e.(BP.μ_0, ω_2_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"Unemployment shock $\omega_2$")
-lines!(ax, ω_2_grid, γ_μ_1_ω_2, label=L"(μ_1, \omega_2)", color=:blue, linestyle=nothing, linewidth=4)
-lines!(ax, ω_2_grid, γ_μ_1_ω_2, label=L"(μ_1, \omega_2)", color=:red, linestyle=:dash, linewidth=4)
-lines!(ax, ω_2_grid, γ_μ_2_ω_2, label=L"(μ_2, \omega_2)", color=:black, linestyle=:dot, linewidth=4)
-lines!(ax, ω_2_grid, γ_μ_2_ω_2, label=L"(μ_2, \omega_2)", color=:green, linestyle=:dashdot, linewidth=4)
-if BP.μ_0 == 0.5 
+lines!(ax, ω_2_grid, γ_μ_1_ω_1, label=L"(\mu_1, \omega_1)", color=:blue, linestyle=nothing, linewidth=4)
+lines!(ax, ω_2_grid, γ_μ_1_ω_2, label=L"(\mu_1, \omega_2)", color=:red, linestyle=:dash, linewidth=4)
+lines!(ax, ω_2_grid, γ_μ_2_ω_1, label=L"(\mu_2, \omega_1)", color=:black, linestyle=:dot, linewidth=4)
+lines!(ax, ω_2_grid, γ_μ_2_ω_2, label=L"(\mu_2, \omega_2)", color=:green, linestyle=:dashdot, linewidth=4)
+if BP.μ_0 == 0.5
     axislegend(position=(1.0, 0.15), nbanks=2, patchsize=(40, 20))
-elseif BP.μ_0 == 0.1 
+elseif BP.μ_0 == 0.1
     axislegend(position=:rc, nbanks=2, patchsize=(40, 20))
 end
 fig
@@ -467,6 +474,7 @@ optimal_flexibility_func!(BP, ω_2_res_ν, "ω_2", ω_2_size, ω_2_grid)
 # plot optimal communication x
 fig = Figure(fontsize=32, size=(600, 500))
 ax = Axis(fig[1, 1], xlabel=L"Unemployment shock $\omega_2$")
+ylims!(ax, -0.05, 1.05)
 lines!(ax, ω_2_grid, ω_2_res_ν[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
 lines!(ax, ω_2_grid, ω_2_res_ν[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
 axislegend(position=:ct, nbanks=2, patchsize=(40, 20))
