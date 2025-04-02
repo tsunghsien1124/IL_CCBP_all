@@ -161,7 +161,9 @@ function optimal_communication_func!(BP::Benchmark_Parameters, res::Array{Float6
         @inbounds res[TA_i, 5] = ν_2
         @inbounds res[TA_i, 6] = μ_1(x_1_opt, x_2_opt, obj_CB_para["μ_0"])
         @inbounds res[TA_i, 7] = μ_2(x_1_opt, x_2_opt, obj_CB_para["μ_0"])
-        @inbounds res[TA_i, 8] = 1.0 - obj_CB_para["δ"] * c(x_1_opt, x_2_opt, obj_CB_para["μ_0"])
+        @inbounds res[TA_i, 8] = 1.0 - obj_CB_para["δ"] * F(x_1_opt, x_2_opt, obj_CB_para["μ_0"], obj_CB_para["a"], obj_CB_para["b"])
+        @inbounds res[TA_i, 9] = obj_CB_para["δ"] * F(x_1_opt, x_2_opt, obj_CB_para["μ_0"], obj_CB_para["a"], obj_CB_para["b"])
+        @inbounds res[TA_i, 10] = c(x_1_opt, x_2_opt, obj_CB_para["μ_0"])
 
         # update timer
         Threads.atomic_add!(jj, 1)
@@ -201,7 +203,9 @@ function optimal_flexibility_func!(BP::Benchmark_Parameters, res::Array{Float64,
         @inbounds res[TA_i, 5] = ν_2_opt
         @inbounds res[TA_i, 6] = μ_1(x_1_opt, x_2_opt, obj_CB_para["μ_0"])
         @inbounds res[TA_i, 7] = μ_2(x_1_opt, x_2_opt, obj_CB_para["μ_0"])
-        @inbounds res[TA_i, 8] = 1.0 - obj_CB_para["δ"] * c(x_1_opt, x_2_opt, obj_CB_para["μ_0"])
+        @inbounds res[TA_i, 8] = 1.0 - obj_CB_para["δ"] * F(x_1_opt, x_2_opt, obj_CB_para["μ_0"], obj_CB_para["a"], obj_CB_para["b"])
+        @inbounds res[TA_i, 9] = obj_CB_para["δ"] * F(x_1_opt, x_2_opt, obj_CB_para["μ_0"], obj_CB_para["a"], obj_CB_para["b"])
+        @inbounds res[TA_i, 10] = c(x_1_opt, x_2_opt, obj_CB_para["μ_0"])
 
         # update timer
         Threads.atomic_add!(jj, 1)
@@ -212,11 +216,14 @@ function optimal_flexibility_func!(BP::Benchmark_Parameters, res::Array{Float64,
     return nothing
 end
 
-function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_size::Int64, TV_grid::Array{Float64,1}, TV_res::Array{Float64,2}, dg_f::Int64, PATH_FIG_para_x::String, PATH_FIG_para_ν::String)
+function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_size::Int64, TV_grid::Array{Float64,1}, TV_res::Array{Float64,2}, dg_f::Int64, PATH_FIG_para_x::String, PATH_FIG_para_ν::String; Optimal_ν::Int64=0)
 
     # communication
     filename_x = "fig_optimal_x_by_" * TV
     filename_γ = "fig_optimal_γ_by_" * TV
+    filename_1_F = "fig_optimal_1-F_by_" * TV
+    filename_F = "fig_optimal_F_by_" * TV
+    filename_c = "fig_optimal_c_by_" * TV
     optimal_communication_func!(BP, TV_res, TV, TV_size, TV_grid)
     TV_res = round.(TV_res, digits=dg_f)
 
@@ -269,34 +276,73 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
     save(PATH_FIG_para_x * FL * filename_γ * ".pdf", fig)
     save(PATH_FIG_para_x * FL * filename_γ * ".png", fig)
 
-    # flexibility
-    filename_x = "fig_optimal_x_by_" * TV
-    filename_γ = "fig_optimal_γ_by_" * TV
-    filename_ν = "fig_optimal_ν_by_" * TV
-    TV_res_ν = zeros(TV_size, 8)
-    optimal_flexibility_func!(BP, TV_res_ν, TV, TV_size, TV_grid)
-    TV_res_ν = round.(TV_res_ν, digits=dg_f)
-
-    # plot optimal communication x
+    # share of attentive receivers
     fig = Figure(fontsize=32, size=(600, 500))
     ax = Axis(fig[1, 1], xlabel=xlabel_)
     ylims!(ax, -0.05, 1.05)
-    lines!(ax, TV_grid, TV_res_ν[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
-    lines!(ax, TV_grid, TV_res_ν[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
+    lines!(ax, TV_grid, TV_res[:, 8], label=L"$1 - \delta F(x_1,\,x_2,\,\mu_0,\,a,\,b)$", color=:blue, linestyle=nothing, linewidth=4)
     axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
     fig
-    save(PATH_FIG_para_ν * FL * filename_x * ".pdf", fig)
-    save(PATH_FIG_para_ν * FL * filename_x * ".png", fig)
+    save(PATH_FIG_para_x * FL * filename_1_F * ".pdf", fig)
+    save(PATH_FIG_para_x * FL * filename_1_F * ".png", fig)
 
-    # plot optimal flexibility ν
+    # share of inattentive receivers
     fig = Figure(fontsize=32, size=(600, 500))
     ax = Axis(fig[1, 1], xlabel=xlabel_)
-    lines!(ax, TV_grid, TV_res_ν[:, 4], label=L"$\nu_1$", color=:blue, linestyle=nothing, linewidth=4)
-    lines!(ax, TV_grid, TV_res_ν[:, 5], label=L"$\nu_2$", color=:red, linestyle=:dash, linewidth=4)
+    ylims!(ax, -0.05, 1.05)
+    lines!(ax, TV_grid, TV_res[:, 9], label=L"$ \delta F(x_1,\,x_2,\,\mu_0,\,a,\,b)$", color=:blue, linestyle=nothing, linewidth=4)
     axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
     fig
-    save(PATH_FIG_para_ν * FL * filename_ν * ".pdf", fig)
-    save(PATH_FIG_para_ν * FL * filename_ν * ".png", fig)
+    save(PATH_FIG_para_x * FL * filename_F * ".pdf", fig)
+    save(PATH_FIG_para_x * FL * filename_F * ".png", fig)
+
+    # information cost
+    fig = Figure(fontsize=32, size=(600, 500))
+    ax = Axis(fig[1, 1], xlabel=xlabel_)
+    ylims!(ax, -0.05, 1.05)
+    lines!(ax, TV_grid, TV_res[:, 10], label=L"$c(x_1,\,x_2,\,\mu_0)$", color=:blue, linestyle=nothing, linewidth=4)
+    axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
+    fig
+    save(PATH_FIG_para_x * FL * filename_c * ".pdf", fig)
+    save(PATH_FIG_para_x * FL * filename_c * ".png", fig)
+    
+    #========================#
+    # distribution functions #
+    #========================#
+    f(x_1, x_2, μ, a, b) = a * b * (c(x_1, x_2, μ)^(a - 1.0)) * (1.0 - c(x_1, x_2, μ)^a)^(b - 1.0)
+    F(x_1, x_2, μ, a, b) = 1.0 - (1.0 - c(x_1, x_2, μ)^a)^b
+
+    if Optimal_ν == 1
+
+        # flexibility
+        filename_x = "fig_optimal_x_by_" * TV
+        filename_γ = "fig_optimal_γ_by_" * TV
+        filename_ν = "fig_optimal_ν_by_" * TV
+        TV_res_ν = zeros(TV_size, 8)
+        optimal_flexibility_func!(BP, TV_res_ν, TV, TV_size, TV_grid)
+        TV_res_ν = round.(TV_res_ν, digits=dg_f)
+
+        # plot optimal communication x
+        fig = Figure(fontsize=32, size=(600, 500))
+        ax = Axis(fig[1, 1], xlabel=xlabel_)
+        ylims!(ax, -0.05, 1.05)
+        lines!(ax, TV_grid, TV_res_ν[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
+        lines!(ax, TV_grid, TV_res_ν[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
+        axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
+        fig
+        save(PATH_FIG_para_ν * FL * filename_x * ".pdf", fig)
+        save(PATH_FIG_para_ν * FL * filename_x * ".png", fig)
+
+        # plot optimal flexibility ν
+        fig = Figure(fontsize=32, size=(600, 500))
+        ax = Axis(fig[1, 1], xlabel=xlabel_)
+        lines!(ax, TV_grid, TV_res_ν[:, 4], label=L"$\nu_1$", color=:blue, linestyle=nothing, linewidth=4)
+        lines!(ax, TV_grid, TV_res_ν[:, 5], label=L"$\nu_2$", color=:red, linestyle=:dash, linewidth=4)
+        axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
+        fig
+        save(PATH_FIG_para_ν * FL * filename_ν * ".pdf", fig)
+        save(PATH_FIG_para_ν * FL * filename_ν * ".png", fig)
+    end
 
     return nothing
 end
@@ -366,15 +412,13 @@ function solve_function()
     # containers
     μ_grid_ = collect(0.001:0.0005:0.999)
     μ_size_ = length(μ_grid_)
-    μ_res_ = zeros(μ_size_, 8)
+    μ_res_ = zeros(μ_size_, 10)
     ω_grid_ = collect(0.5:0.0005:1.5)
     ω_size_ = length(ω_grid_)
-    ω_res_ = zeros(ω_size_, 8)
+    ω_res_ = zeros(ω_size_, 10)
 
     # loop over all parameter space
-    for (ab_i, γ_i, α_i, θ_i, δ_i, μ_0_i, μ_0_c_i, ω_1_i, ω_2_i) in all_combinations
-
-        a_i, b_i = ab_i
+    for ((a_i, b_i), γ_i, α_i, θ_i, δ_i, μ_0_i, μ_0_c_i, ω_1_i, ω_2_i) in all_combinations
 
         # construct parameter bundle
         println("task: $all_combinations_i / $all_combinations_size")

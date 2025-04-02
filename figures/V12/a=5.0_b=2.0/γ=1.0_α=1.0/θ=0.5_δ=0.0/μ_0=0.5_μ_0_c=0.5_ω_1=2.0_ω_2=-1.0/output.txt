@@ -20,5 +20,5 @@ Benchmark_Parameters
   ϵ_tol: Float64 1.0e-6
   max_iter: Int64 3000
 
-Finished: 2025-04-01T03:11:32.550
+Finished: 2025-04-01T18:10:18.608
 
