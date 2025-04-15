@@ -229,37 +229,37 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
 
     # xlabel for targeted variable (TV)
     if TV == "μ_0"
-        xlabel_ = L"HH prior $\mu_0$"
+        xlabel_ = L"Individual prior $\mu_0$"
     elseif TV == "μ_0_c"
-        xlabel_ = L"CB prior $\mu^c_0$"
+        xlabel_ = L"Central bank prior $\mu^c_0$"
     elseif TV == "ω_1"
         xlabel_ = L"Unemployment shock $\omega_1$"
     elseif TV == "ω_2"
-        xlabel_ = L"Unemployment shock $\omega_2$"
+        xlabel_ = L"Employment shock $\omega_2$"
     end
 
     # plot optimal communication x
     fig = Figure(fontsize=32, size=(600, 500))
     ax = Axis(fig[1, 1], xlabel=xlabel_)
     ylims!(ax, -0.05, 1.05)
-    lines!(ax, TV_grid, TV_res[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
-    lines!(ax, TV_grid, TV_res[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
+    lines!(ax, TV_grid, TV_res[:, 2], label=L"$\sigma_1$", color=:blue, linestyle=nothing, linewidth=4)
+    lines!(ax, TV_grid, TV_res[:, 3], label=L"$\sigma_2$", color=:red, linestyle=:dash, linewidth=4)
     axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
     fig
     save(PATH_FIG_para_x * FL * filename_x * ".pdf", fig)
     save(PATH_FIG_para_x * FL * filename_x * ".png", fig)
 
-    # plot inflation surprise γ * (x_e - x_r)
+    # plot inflation surprise γ * (x_r - x_e)
     if TV == "μ_0"
-        γ_μ_1_ω_1 = BP.γ .* (x_e.(TV_grid, TV_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
-        γ_μ_1_ω_2 = BP.γ .* (x_e.(TV_grid, TV_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
-        γ_μ_2_ω_1 = BP.γ .* (x_e.(TV_grid, TV_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
-        γ_μ_2_ω_2 = BP.γ .* (x_e.(TV_grid, TV_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
+        γ_μ_1_ω_1 = -BP.γ .* (x_e.(TV_grid, TV_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
+        γ_μ_1_ω_2 = -BP.γ .* (x_e.(TV_grid, TV_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
+        γ_μ_2_ω_1 = -BP.γ .* (x_e.(TV_grid, TV_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
+        γ_μ_2_ω_2 = -BP.γ .* (x_e.(TV_grid, TV_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
     else
-        γ_μ_1_ω_1 = BP.γ .* (x_e.(BP.μ_0, TV_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
-        γ_μ_1_ω_2 = BP.γ .* (x_e.(BP.μ_0, TV_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
-        γ_μ_2_ω_1 = BP.γ .* (x_e.(BP.μ_0, TV_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
-        γ_μ_2_ω_2 = BP.γ .* (x_e.(BP.μ_0, TV_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
+        γ_μ_1_ω_1 = -BP.γ .* (x_e.(BP.μ_0, TV_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
+        γ_μ_1_ω_2 = -BP.γ .* (x_e.(BP.μ_0, TV_res[:, 6], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
+        γ_μ_2_ω_1 = -BP.γ .* (x_e.(BP.μ_0, TV_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(1, BP.x_T, BP.ν_1, BP.ν_2))
+        γ_μ_2_ω_2 = -BP.γ .* (x_e.(BP.μ_0, TV_res[:, 7], BP.x_T, BP.ν_1, BP.ν_2, BP.θ) .- x_r(2, BP.x_T, BP.ν_1, BP.ν_2))
     end
     fig = Figure(fontsize=32, size=(600, 500))
     ax = Axis(fig[1, 1], xlabel=xlabel_)
@@ -271,6 +271,8 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
         axislegend(position=(1.0, 0.25), nbanks=2, patchsize=(40, 20))
     elseif BP.γ == 1.0
         axislegend(position=:rb, nbanks=2, patchsize=(40, 20))
+    else
+        axislegend(position=(1.0, 0.25), nbanks=2, patchsize=(40, 20))
     end
     fig
     save(PATH_FIG_para_x * FL * filename_γ * ".pdf", fig)
@@ -280,7 +282,7 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
     fig = Figure(fontsize=32, size=(600, 500))
     ax = Axis(fig[1, 1], xlabel=xlabel_)
     ylims!(ax, -0.05, 1.05)
-    lines!(ax, TV_grid, TV_res[:, 8], label=L"$1 - \delta F(x_1,\,x_2,\,\mu_0,\,a,\,b)$", color=:blue, linestyle=nothing, linewidth=4)
+    lines!(ax, TV_grid, TV_res[:, 8], label=L"$1 - \delta F(\sigma_1,\,\sigma_2,\,\mu_0,\,a,\,b)$", color=:blue, linestyle=nothing, linewidth=4)
     axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
     fig
     save(PATH_FIG_para_x * FL * filename_1_F * ".pdf", fig)
@@ -290,7 +292,7 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
     fig = Figure(fontsize=32, size=(600, 500))
     ax = Axis(fig[1, 1], xlabel=xlabel_)
     ylims!(ax, -0.05, 1.05)
-    lines!(ax, TV_grid, TV_res[:, 9], label=L"$ \delta F(x_1,\,x_2,\,\mu_0,\,a,\,b)$", color=:blue, linestyle=nothing, linewidth=4)
+    lines!(ax, TV_grid, TV_res[:, 9], label=L"$ \delta F(\sigma_1,\,\sigma_2,\,\mu_0,\,a,\,b)$", color=:blue, linestyle=nothing, linewidth=4)
     axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
     fig
     save(PATH_FIG_para_x * FL * filename_F * ".pdf", fig)
@@ -300,7 +302,7 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
     fig = Figure(fontsize=32, size=(600, 500))
     ax = Axis(fig[1, 1], xlabel=xlabel_)
     ylims!(ax, -0.05, 1.05)
-    lines!(ax, TV_grid, TV_res[:, 10], label=L"$c(x_1,\,x_2,\,\mu_0)$", color=:blue, linestyle=nothing, linewidth=4)
+    lines!(ax, TV_grid, TV_res[:, 10], label=L"$c(\sigma_1,\,\sigma_2,\,\mu_0)$", color=:blue, linestyle=nothing, linewidth=4)
     axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
     fig
     save(PATH_FIG_para_x * FL * filename_c * ".pdf", fig)
@@ -326,8 +328,8 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
         fig = Figure(fontsize=32, size=(600, 500))
         ax = Axis(fig[1, 1], xlabel=xlabel_)
         ylims!(ax, -0.05, 1.05)
-        lines!(ax, TV_grid, TV_res_ν[:, 2], label=L"$x_1$", color=:blue, linestyle=nothing, linewidth=4)
-        lines!(ax, TV_grid, TV_res_ν[:, 3], label=L"$x_2$", color=:red, linestyle=:dash, linewidth=4)
+        lines!(ax, TV_grid, TV_res_ν[:, 2], label=L"$\sigma_1$", color=:blue, linestyle=nothing, linewidth=4)
+        lines!(ax, TV_grid, TV_res_ν[:, 3], label=L"$\sigma_2$", color=:red, linestyle=:dash, linewidth=4)
         axislegend(position=:cb, nbanks=2, patchsize=(40, 20))
         fig
         save(PATH_FIG_para_ν * FL * filename_x * ".pdf", fig)
@@ -353,17 +355,17 @@ end
 function solve_function()
     # benchmark
     # a_b_grid = [(1.0, 1.0)]
-    # γ_grid = [10.0]
+    # γ_grid = [2.94]
     # α_grid = [1.0]
     # θ_grid = [1.0]
-    # δ_grid = [0.5]
+    # δ_grid = [1.0]
     # μ_0_grid = [0.5]
     # μ_0_c_grid = [0.5]
     # ω_1_grid = [1.0]
     # ω_2_grid = [-1.0]
 
     a_b_grid = [(1.0, 1.0), (2.0, 5.0), (5.0, 2.0)]
-    γ_grid = [10.0, 1.0]
+    γ_grid = [2.94, 1.0]
     α_grid = [1.0]
     θ_grid = [1.0, 0.5]
     δ_grid = [0.5, 1.0, 0.0]
