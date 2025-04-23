@@ -16,7 +16,7 @@ using Base.Iterators
 # Housekeeping #
 #==============#
 PWD = pwd()
-VER = "V12"
+VER = "V14"
 if Sys.iswindows()
     FL = "\\"
 else
@@ -74,7 +74,7 @@ obj_CB(x_1, x_2, μ_0, μ_0_c, ω_1, ω_2, δ, γ, x_T, ν_1, ν_2, α, θ, a, b
     μ_0::Float64 = 0.5
     μ_0_diff::Float64 = 0.0
     μ_0_c::Float64 = 0.5 # μ_0 * (1.0 + μ_0_diff / 100)
-    γ::Float64 = 10.0
+    γ::Float64 = 2.94 # new benchmark
     x_T::Float64 = 2.0
     ν_1::Float64 = 1.0
     ν_2::Float64 = 1.0
@@ -307,7 +307,7 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
     fig
     save(PATH_FIG_para_x * FL * filename_c * ".pdf", fig)
     save(PATH_FIG_para_x * FL * filename_c * ".png", fig)
-    
+
     #========================#
     # distribution functions #
     #========================#
@@ -349,30 +349,96 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
     return nothing
 end
 
+#===================#
+# benchmark results #
+#===================#
+function solve_benchmark_comparison_function()
+
+    # benchmark parameterization
+    BP = Benchmark_Parameters()
+
+    # unpack benchmark parameters
+    @unpack a, b, μ_0, μ_0_c, ω_1, ω_2, δ, γ, x_T, ν_1, ν_2, α, θ, a, b, ϵ_x, ϵ_x_p, ϵ_tol, max_iter = BP
+
+    # create file directories
+    PATH_FIG_para = mkpath(PATH_FIG * FL * "a=$(round(a,digits=dg_p))_b=$(round(b,digits=dg_p))")
+    filename_x = "proposition_1"
+    xlabel_ = L"$\frac{2\omega}{\gamma\nu}$"
+    ylabel_ = L"$\sigma^*$"
+
+    # counterfactual parameter values
+    δ_grid = [0.0, 0.5, 1.0]
+    δ_size = length(δ_grid)
+    ω_grid = collect(0.0:0.001:BP.γ*BP.ν_1)
+    ω_size = length(ω_grid)
+    all_combinations = Iterators.product(1:δ_size, 1:ω_size)
+    all_combinations_size = length(all_combinations)
+    all_combinations_i = 1
+    BC_results = zeros(2, δ_size, ω_size)
+
+    # loop over parameter space
+    for (δ_i, ω_i) in all_combinations
+
+        # construct parameter bundle
+        println("task progress: $all_combinations_i / $all_combinations_size for (θ, ω) = ($δ_i, $ω_i)")
+        BP = Benchmark_Parameters(δ=δ_i, ω_1=ω_i, ω_2=-ω_i)
+
+        # create the parameter dictionary
+        obj_CB_para = Dict([("μ_0", μ_0), ("μ_0_c", μ_0_c), ("ω_1", ω_1), ("ω_2", ω_2), ("δ", δ), ("γ", γ), ("x_T", x_T), ("ν_1", ν_1), ("ν_2", ν_2), ("α", α), ("θ", θ), ("a", a), ("b", b), ("ϵ_x", ϵ_x), ("ϵ_x_p", ϵ_x_p), ("ϵ_tol", ϵ_tol), ("max_iter", max_iter)])
+        obj_CB_para["δ"] = δ_grid[δ_i]
+        obj_CB_para["ω_1"] = ω_grid[ω_i]
+        obj_CB_para["ω_2"] = -ω_grid[ω_i]
+
+        # slove CB's optimization problem for (x_1, x_2)
+        obj_opt, x_1_opt, x_2_opt = optimal_x_func(obj_CB_para["μ_0"], obj_CB_para["μ_0_c"], obj_CB_para["ω_1"], obj_CB_para["ω_2"], obj_CB_para["δ"], obj_CB_para["γ"], obj_CB_para["x_T"], obj_CB_para["ν_1"], obj_CB_para["ν_2"], obj_CB_para["α"], obj_CB_para["θ"], obj_CB_para["a"], obj_CB_para["b"], obj_CB_para["ϵ_x"], obj_CB_para["ϵ_x_p"], obj_CB_para["ϵ_tol"], obj_CB_para["max_iter"])
+
+        # store the optimal communication
+        BC_results[1, δ_i, ω_i] = 2 * obj_CB_para["ω_1"] / obj_CB_para["γ"] * obj_CB_para["ν_1"]
+        BC_results[2, δ_i, ω_i] = x_1_opt
+
+        # update iteration counter
+        all_combinations_i += 1
+    end
+
+    fig = Figure(fontsize=32, size=(600, 500))
+    ax = Axis(fig[1, 1], xlabel=xlabel_, ylabel=ylabel_)
+    ylims!(ax, 0.45, 1.05)
+    lines!(ax, BC_results[1,1,:], BC_results[2,1,:], label=L"$\delta$=%$(δ_grid[1])", color=:blue, linestyle=nothing, linewidth=4)
+    lines!(ax, BC_results[1,2,:], BC_results[2,2,:], label=L"$\delta$=%$(δ_grid[2])", color=:red, linestyle=:dash, linewidth=4)
+    lines!(ax, BC_results[1,3,:], BC_results[2,3,:], label=L"$\delta$=%$(δ_grid[3])", color=:black, linestyle=:dot, linewidth=4)
+    axislegend(position=:rt, nbanks=1, patchsize=(40, 20))
+    fig
+    save(PATH_FIG_para * FL * filename_x * ".pdf", fig)
+    save(PATH_FIG_para * FL * filename_x * ".png", fig)
+
+    return nothing
+end
+solve_benchmark_comparison_function()
+
 #=============================#
 # all counterfactuals results #
 #=============================#
 function solve_function()
     # benchmark
-    # a_b_grid = [(1.0, 1.0)]
-    # γ_grid = [2.94]
-    # α_grid = [1.0]
-    # θ_grid = [1.0]
-    # δ_grid = [1.0]
-    # μ_0_grid = [0.5]
-    # μ_0_c_grid = [0.5]
-    # ω_1_grid = [1.0]
-    # ω_2_grid = [-1.0]
-
-    a_b_grid = [(1.0, 1.0), (2.0, 5.0), (5.0, 2.0)]
-    γ_grid = [2.94, 1.0]
+    a_b_grid = [(1.0, 1.0)]
+    γ_grid = [2.94]
     α_grid = [1.0]
-    θ_grid = [1.0, 0.5]
-    δ_grid = [0.5, 1.0, 0.0]
-    μ_0_grid = [0.5, 0.1]
+    θ_grid = [1.0]
+    δ_grid = [1.0]
+    μ_0_grid = [0.5]
     μ_0_c_grid = [0.5]
-    ω_1_grid = [1.0, 2.0]
-    ω_2_grid = [-1.0, -2.0]
+    ω_1_grid = [1.0]
+    ω_2_grid = [-1.0]
+
+    # a_b_grid = [(1.0, 1.0), (2.0, 5.0), (5.0, 2.0)]
+    γ_grid = [2.94, 1.0]
+    # α_grid = [1.0]
+    # θ_grid = [1.0, 0.5]
+    # δ_grid = [0.5, 1.0]
+    # μ_0_grid = [0.5, 0.1]
+    # μ_0_c_grid = [0.5]
+    ω_1_grid = [1.0, 3.0]
+    ω_2_grid = [-1.0, -3.0]
 
     all_combinations = Iterators.product(a_b_grid, γ_grid, α_grid, θ_grid, δ_grid, μ_0_grid, μ_0_c_grid, ω_1_grid, ω_2_grid)
     all_combinations_size = length(all_combinations)
