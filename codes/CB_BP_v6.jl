@@ -16,7 +16,7 @@ using Base.Iterators
 # Housekeeping #
 #==============#
 PWD = pwd()
-VER = "V14"
+VER = "V15"
 if Sys.iswindows()
     FL = "\\"
 else
@@ -68,7 +68,7 @@ obj_CB(x_1, x_2, μ_0, μ_0_c, ω_1, ω_2, δ, γ, x_T, ν_1, ν_2, α, θ, a, b
 # benchmark parameters #
 #======================#
 @with_kw struct Benchmark_Parameters
-    δ::Float64 = 0.5
+    δ::Float64 = 1.0
     ω_1::Float64 = 1.0
     ω_2::Float64 = -1.0
     μ_0::Float64 = 0.5
@@ -240,7 +240,7 @@ function comparative_result_function!(BP::Benchmark_Parameters, TV::String, TV_s
 
     # plot optimal communication x
     fig = Figure(fontsize=32, size=(600, 500))
-    ax = Axis(fig[1, 1], xlabel=xlabel_)
+    ax = Axis(fig[1, 1], xlabel=xlabel_, ylabel=L"\sigma")
     ylims!(ax, -0.05, 1.05)
     lines!(ax, TV_grid, TV_res[:, 2], label=L"$\sigma_1$", color=:blue, linestyle=nothing, linewidth=4)
     lines!(ax, TV_grid, TV_res[:, 3], label=L"$\sigma_2$", color=:red, linestyle=:dash, linewidth=4)
@@ -363,7 +363,7 @@ function solve_benchmark_comparison_function()
     # create file directories
     PATH_FIG_para = mkpath(PATH_FIG * FL * "a=$(round(a,digits=dg_p))_b=$(round(b,digits=dg_p))")
     filename_x = "proposition_1"
-    xlabel_ = L"$\frac{2\omega}{\gamma\nu}$"
+    xlabel_ = L"Ratio $\frac{2\omega}{\gamma\nu}$"
     ylabel_ = L"$\sigma^*$"
 
     # counterfactual parameter values
@@ -371,17 +371,21 @@ function solve_benchmark_comparison_function()
     δ_size = length(δ_grid)
     ω_grid = collect(0.0:0.001:BP.γ*BP.ν_1)
     ω_size = length(ω_grid)
-    all_combinations = Iterators.product(1:δ_size, 1:ω_size)
+    all_combinations = collect(Iterators.product(1:δ_size, 1:ω_size))
     all_combinations_size = length(all_combinations)
-    all_combinations_i = 1
     BC_results = zeros(2, δ_size, ω_size)
 
-    # loop over parameter space
-    for (δ_i, ω_i) in all_combinations
+    # timer
+    pp = Progress(all_combinations_size)
+    update!(pp, 0)
+    jj = Threads.Atomic{Int}(0)
+    ll = Threads.SpinLock()
 
-        # construct parameter bundle
-        println("task progress: $all_combinations_i / $all_combinations_size for (θ, ω) = ($δ_i, $ω_i)")
-        BP = Benchmark_Parameters(δ=δ_i, ω_1=ω_i, ω_2=-ω_i)
+    # loop over parameter space
+    Threads.@threads for all_combinations_i in 1:all_combinations_size
+
+        # extract parameter index
+        (δ_i, ω_i) = all_combinations[all_combinations_i]
 
         # create the parameter dictionary
         obj_CB_para = Dict([("μ_0", μ_0), ("μ_0_c", μ_0_c), ("ω_1", ω_1), ("ω_2", ω_2), ("δ", δ), ("γ", γ), ("x_T", x_T), ("ν_1", ν_1), ("ν_2", ν_2), ("α", α), ("θ", θ), ("a", a), ("b", b), ("ϵ_x", ϵ_x), ("ϵ_x_p", ϵ_x_p), ("ϵ_tol", ϵ_tol), ("max_iter", max_iter)])
@@ -396,16 +400,19 @@ function solve_benchmark_comparison_function()
         BC_results[1, δ_i, ω_i] = 2 * obj_CB_para["ω_1"] / obj_CB_para["γ"] * obj_CB_para["ν_1"]
         BC_results[2, δ_i, ω_i] = x_1_opt
 
-        # update iteration counter
-        all_combinations_i += 1
+        # update timer
+        Threads.atomic_add!(jj, 1)
+        Threads.lock(ll)
+        update!(pp, jj[])
+        Threads.unlock(ll)
     end
 
     fig = Figure(fontsize=32, size=(600, 500))
     ax = Axis(fig[1, 1], xlabel=xlabel_, ylabel=ylabel_)
     ylims!(ax, 0.45, 1.05)
-    lines!(ax, BC_results[1,1,:], BC_results[2,1,:], label=L"$\delta$=%$(δ_grid[1])", color=:blue, linestyle=nothing, linewidth=4)
-    lines!(ax, BC_results[1,2,:], BC_results[2,2,:], label=L"$\delta$=%$(δ_grid[2])", color=:red, linestyle=:dash, linewidth=4)
-    lines!(ax, BC_results[1,3,:], BC_results[2,3,:], label=L"$\delta$=%$(δ_grid[3])", color=:black, linestyle=:dot, linewidth=4)
+    lines!(ax, BC_results[1, 1, :], BC_results[2, 1, :], label=L"$\delta$=%$(δ_grid[1])", color=:blue, linestyle=nothing, linewidth=4)
+    lines!(ax, BC_results[1, 2, :], BC_results[2, 2, :], label=L"$\delta$=%$(δ_grid[2])", color=:red, linestyle=:dash, linewidth=4)
+    lines!(ax, BC_results[1, 3, :], BC_results[2, 3, :], label=L"$\delta$=%$(δ_grid[3])", color=:black, linestyle=:dot, linewidth=4)
     axislegend(position=:rt, nbanks=1, patchsize=(40, 20))
     fig
     save(PATH_FIG_para * FL * filename_x * ".pdf", fig)
@@ -420,27 +427,46 @@ solve_benchmark_comparison_function()
 #=============================#
 function solve_function()
     # benchmark
-    a_b_grid = [(1.0, 1.0)]
-    γ_grid = [2.94]
-    α_grid = [1.0]
-    θ_grid = [1.0]
-    δ_grid = [1.0]
-    μ_0_grid = [0.5]
-    μ_0_c_grid = [0.5]
-    ω_1_grid = [1.0]
-    ω_2_grid = [-1.0]
+    # a_b_grid = [(1.0, 1.0)]
+    # γ_grid = [2.94]
+    # α_grid = [1.0]
+    # θ_grid = [1.0]
+    # δ_grid = [1.0]
+    # μ_0_grid = [0.5]
+    # μ_0_c_grid = [0.5]
+    # ω_1_grid = [1.0]
+    # ω_2_grid = [-1.0]
 
     # a_b_grid = [(1.0, 1.0), (2.0, 5.0), (5.0, 2.0)]
-    γ_grid = [2.94, 1.0]
+    # γ_grid = [2.94, 1.0]
     # α_grid = [1.0]
     # θ_grid = [1.0, 0.5]
     # δ_grid = [0.5, 1.0]
     # μ_0_grid = [0.5, 0.1]
     # μ_0_c_grid = [0.5]
-    ω_1_grid = [1.0, 3.0]
-    ω_2_grid = [-1.0, -3.0]
+    # ω_1_grid = [1.0, 3.0]
+    # ω_2_grid = [-1.0, -3.0]
 
-    all_combinations = Iterators.product(a_b_grid, γ_grid, α_grid, θ_grid, δ_grid, μ_0_grid, μ_0_c_grid, ω_1_grid, ω_2_grid)
+    # all_combinations = Iterators.product(a_b_grid, γ_grid, α_grid, θ_grid, δ_grid, μ_0_grid, μ_0_c_grid, ω_1_grid, ω_2_grid)
+    # all_combinations_size = length(all_combinations)
+    # all_combinations_i = 1
+
+    # a, b, γ, α, θ, δ, μ_0, μ_0_c, ω_1, ω_2
+    all_combinations = []
+
+    push!(all_combinations, [1.0, 1.0, 2.94, 1.0, 1.0, 1.0, 0.5, 0.5, 1.0, -1.0])
+    push!(all_combinations, [1.0, 1.0, 2.94, 1.0, 1.0, 0.5, 0.5, 0.5, 1.0, -1.0])
+
+    push!(all_combinations, [1.0, 1.0, 1.00, 1.0, 1.0, 1.0, 0.5, 0.5, 1.0, -1.0])
+    push!(all_combinations, [1.0, 1.0, 1.00, 1.0, 1.0, 0.5, 0.5, 0.5, 1.0, -1.0])
+    push!(all_combinations, [1.0, 1.0, 1.00, 1.0, 1.0, 1.0, 0.1, 0.5, 1.0, -1.0])
+
+    push!(all_combinations, [1.0, 1.0, 2.94, 1.0, 1.0, 1.0, 0.5, 0.5, 3.0, -3.0])
+    push!(all_combinations, [1.0, 1.0, 2.94, 1.0, 1.0, 1.0, 0.5, 0.5, 3.0, -1.0])
+
+    push!(all_combinations, [1.0, 5.0, 2.94, 1.0, 1.0, 1.0, 0.5, 0.5, 1.0, -1.0])
+    push!(all_combinations, [1.0, 5.0, 2.94, 1.0, 1.0, 0.5, 0.5, 0.5, 1.0, -1.0])
+
     all_combinations_size = length(all_combinations)
     all_combinations_i = 1
 
@@ -450,16 +476,17 @@ function solve_function()
     c_grid = collect(0.0:0.0005:1.0)
     color_ = [:blue, :red, :black]
     linestyle_ = [nothing, :dash, :dot]
+    a_b_grid = [(1, 1), (1, 5), (5, 1)]
 
     # pdf
     i = 1
     fig = Figure(fontsize=32, size=(600, 500))
-    ax = Axis(fig[1, 1], xlabel=L"c")
+    ax = Axis(fig[1, 1], xlabel=L"Attention budget $\kappa$", ylabel=L"f(\kappa)")
     for (a_i, b_i) in a_b_grid
-        lines!(ax, c_grid, f.(c_grid, a_i, b_i), label=L"$a=%$a_i,\,b=%$b_i$", color=color_[i], linestyle=linestyle_[i], linewidth=4)
+        lines!(ax, c_grid, f.(c_grid, a_i, b_i), label=L"($a$,$b$)=(%$a_i,%$b_i)", color=color_[i], linestyle=linestyle_[i], linewidth=4)
         i += 1
     end
-    axislegend(position=:lt, nbanks=1, patchsize=(40, 20))
+    axislegend(position=:ct, nbanks=1, patchsize=(40, 20))
     fig
     save(PATH_FIG * FL * "Kumaraswamy_pdf.pdf", fig)
     save(PATH_FIG * FL * "Kumaraswamy_pdf.png", fig)
@@ -467,9 +494,9 @@ function solve_function()
     # cdf
     i = 1
     fig = Figure(fontsize=32, size=(600, 500))
-    ax = Axis(fig[1, 1], xlabel=L"c")
+    ax = Axis(fig[1, 1], xlabel=L"Attention budget $\kappa$", ylabel=L"F(\kappa)")
     for (a_i, b_i) in a_b_grid
-        lines!(ax, c_grid, F.(c_grid, a_i, b_i), label=L"$a=%$a_i,\,b=%$b_i$", color=color_[i], linestyle=linestyle_[i], linewidth=4)
+        lines!(ax, c_grid, F.(c_grid, a_i, b_i), label=L"($a$,$b$)=(%$a_i,%$b_i)", color=color_[i], linestyle=linestyle_[i], linewidth=4)
         i += 1
     end
     axislegend(position=:lt, nbanks=1, patchsize=(40, 20))
@@ -486,7 +513,10 @@ function solve_function()
     ω_res_ = zeros(ω_size_, 10)
 
     # loop over all parameter space
-    for ((a_i, b_i), γ_i, α_i, θ_i, δ_i, μ_0_i, μ_0_c_i, ω_1_i, ω_2_i) in all_combinations
+    # for ((a_i, b_i), γ_i, α_i, θ_i, δ_i, μ_0_i, μ_0_c_i, ω_1_i, ω_2_i) in all_combinations
+    for all_combinations_i in 1:all_combinations_size
+
+        (a_i, b_i, γ_i, α_i, θ_i, δ_i, μ_0_i, μ_0_c_i, ω_1_i, ω_2_i) = all_combinations[all_combinations_i]
 
         # construct parameter bundle
         println("task: $all_combinations_i / $all_combinations_size")
@@ -529,3 +559,85 @@ solve_function()
 #     for γ_i in γ_grid, α_i in α_grid
 #         for θ_i in θ_grid, δ_i in δ_grid
 #             for μ_0_i in μ_0_grid, μ_0_c_i in μ_0_c_grid, ω_1_i in ω_1_grid, ω_2_i in ω_2_grid
+
+#====================#
+# behavioral results #
+#====================#
+function solve_behavioral_comparison_function()
+
+    # benchmark parameterization
+    BP = Benchmark_Parameters()
+
+    # unpack benchmark parameters
+    @unpack a, b, μ_0, μ_0_c, ω_1, ω_2, δ, γ, x_T, ν_1, ν_2, α, θ, a, b, ϵ_x, ϵ_x_p, ϵ_tol, max_iter = BP
+
+    # create file directories
+    filename_1 = "proposition_2_extensive"
+    xlabel_1, ylabel_1 = L"Degree of adaptiveness $\theta$", L"$\frac{2\omega}{\gamma\nu}$"
+    filename_2 = "proposition_2_intensive"
+    xlabel_2, ylabel_2 = L"Shape parameter $b$", L"$\sigma^*$"
+
+    # extentive margin
+    θ_grid = collect(0.0:0.1:1.0)
+    θ_size = length(θ_grid)
+    thres_grid_l = 2 .- θ_grid
+    thres_h = 3.0
+    thres_grid_h = ones(θ_size) .* thres_h
+    fig = Figure(fontsize=32, size=(600, 500))
+    ax = Axis(fig[1, 1], xlabel=xlabel_1, ylabel=ylabel_1)
+    ylims!(ax, -0.05, thres_h + 0.05)
+    band!(θ_grid, thres_grid_l, thres_grid_h, color=(:blue, 0.4), label=L"$\frac{2\omega}{\gamma\nu}\,\geq\,(2-\theta)$")
+    # lines!(ax, θ_grid, thres_grid, color=:blue, linestyle=nothing, linewidth=4, label=L"$\frac{2\omega}{\gamma\nu}\,=\,(2-\theta)$")
+    axislegend(position=:lb, nbanks=1, patchsize=(50, 20))
+    fig
+    save(PATH_FIG * FL * filename_1 * ".pdf", fig)
+    save(PATH_FIG * FL * filename_1 * ".png", fig)
+
+    # counterfactual parameter values
+    ab_grid = collect(1.0:0.01:5.0)
+    ab_size = length(ab_grid)
+    # a_results = zeros(ab_size)
+    b_results = zeros(ab_size)
+
+    # timer
+    pp = Progress(ab_size)
+    update!(pp, 0)
+    jj = Threads.Atomic{Int}(0)
+    ll = Threads.SpinLock()
+
+    # loop over parameter space
+    Threads.@threads for ab_i in 1:ab_size
+
+        # println("ab_i = $ab_i")
+
+        # a
+        # obj_CB_para = Dict([("μ_0", μ_0), ("μ_0_c", μ_0_c), ("ω_1", ω_1), ("ω_2", ω_2), ("δ", δ), ("γ", γ), ("x_T", x_T), ("ν_1", ν_1), ("ν_2", ν_2), ("α", α), ("θ", θ), ("a", a), ("b", b), ("ϵ_x", ϵ_x), ("ϵ_x_p", ϵ_x_p), ("ϵ_tol", ϵ_tol), ("max_iter", max_iter)])
+        # obj_CB_para["a"] = ab_grid[ab_i]
+        # obj_opt, x_1_opt, x_2_opt = optimal_x_func(obj_CB_para["μ_0"], obj_CB_para["μ_0_c"], obj_CB_para["ω_1"], obj_CB_para["ω_2"], obj_CB_para["δ"], obj_CB_para["γ"], obj_CB_para["x_T"], obj_CB_para["ν_1"], obj_CB_para["ν_2"], obj_CB_para["α"], obj_CB_para["θ"], obj_CB_para["a"], obj_CB_para["b"], obj_CB_para["ϵ_x"], obj_CB_para["ϵ_x_p"], obj_CB_para["ϵ_tol"], obj_CB_para["max_iter"])
+        # a_results[ab_i] = x_1_opt
+
+        # b
+        obj_CB_para = Dict([("μ_0", μ_0), ("μ_0_c", μ_0_c), ("ω_1", ω_1), ("ω_2", ω_2), ("δ", δ), ("γ", γ), ("x_T", x_T), ("ν_1", ν_1), ("ν_2", ν_2), ("α", α), ("θ", θ), ("a", a), ("b", b), ("ϵ_x", ϵ_x), ("ϵ_x_p", ϵ_x_p), ("ϵ_tol", ϵ_tol), ("max_iter", max_iter)])
+        obj_CB_para["b"] = ab_grid[ab_i]
+        obj_opt, x_1_opt, x_2_opt = optimal_x_func(obj_CB_para["μ_0"], obj_CB_para["μ_0_c"], obj_CB_para["ω_1"], obj_CB_para["ω_2"], obj_CB_para["δ"], obj_CB_para["γ"], obj_CB_para["x_T"], obj_CB_para["ν_1"], obj_CB_para["ν_2"], obj_CB_para["α"], obj_CB_para["θ"], obj_CB_para["a"], obj_CB_para["b"], obj_CB_para["ϵ_x"], obj_CB_para["ϵ_x_p"], obj_CB_para["ϵ_tol"], obj_CB_para["max_iter"])
+        b_results[ab_i] = x_1_opt
+
+        # update timer
+        Threads.atomic_add!(jj, 1)
+        Threads.lock(ll)
+        update!(pp, jj[])
+        Threads.unlock(ll)
+    end
+
+    fig = Figure(fontsize=32, size=(600, 500))
+    ax = Axis(fig[1, 1], xlabel=xlabel_2, ylabel=ylabel_2)
+    ylims!(ax, 0.45, 1.05)
+    lines!(ax, ab_grid, b_results, color=:blue, linestyle=nothing, linewidth=4)
+    # axislegend(position=:rt, nbanks=1, patchsize=(40, 20))
+    fig
+    save(PATH_FIG * FL * filename_2 * ".pdf", fig)
+    save(PATH_FIG * FL * filename_2 * ".png", fig)
+
+    return nothing
+end
+solve_behavioral_comparison_function()
